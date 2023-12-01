@@ -9,9 +9,7 @@
     "build": "vite build",
     "story:build": "histoire build",
     "story:preview": "histoire preview",
-    "do-build-prod": "pnpm run build",
-    "postinstall": "pnpm run build",
-    "do-build-ui": "pnpm run story:build"
+    "postinstall": "pnpm run build"
   },
   "peerDependencies": {
     "vue": "^3.2.25"
