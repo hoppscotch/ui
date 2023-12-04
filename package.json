@@ -101,10 +101,6 @@
     ".": "./dist/index.js",
     "./style.css": "./dist/style.css",
     "./themes.scss": "./dist/themes.scss",
-    "./postcss.config": {
-      "import": "./postcss.config.cjs",
-      "require": "./postcss.config.cjs"
-    },
     "./ui-preset": {
       "import": "./dist/ui-preset.js",
       "require": "./dist/ui-preset.js"

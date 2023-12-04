@@ -3,7 +3,7 @@
     <input
       ref="acInput"
       v-model="text"
-      type="text"
+      :type="type"
       autocomplete="off"
       :placeholder="placeholder"
       :spellcheck="spellcheck"
@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue"
+import { onMounted, ref, computed, watch } from "vue"
 
 const acInput = ref<HTMLInputElement>()
 
@@ -67,6 +67,11 @@ const props = defineProps({
     type: String,
     default: "",
   },
+
+  type: {
+    type: String,
+    default: "text",
+  },
 })
 
 const emit = defineEmits<{
@@ -85,6 +90,13 @@ onMounted(() => {
   })
 })
 
+watch(
+  () => props.value,
+  (newValue) => {
+    text.value = newValue
+  },
+)
+
 const suggestions = computed(() => {
   const input = text.value.substring(0, selectionStart.value)
   return (
@@ -92,7 +104,7 @@ const suggestions = computed(() => {
       .filter(
         (entry) =>
           entry.toLowerCase().startsWith(input.toLowerCase()) &&
-          input.toLowerCase() !== entry.toLowerCase()
+          input.toLowerCase() !== entry.toLowerCase(),
       )
       // We only want the top 10 suggestions.
       .slice(0, 10)
@@ -155,8 +167,8 @@ function handleKeystroke(event: any) {
       if (currentSuggestionIndex.value > -1)
         forceSuggestion(
           suggestions.value.find(
-            (_item, index) => index === currentSuggestionIndex.value
-          )!
+            (_item, index) => index === currentSuggestionIndex.value,
+          )!,
         )
       break
 
@@ -196,7 +208,7 @@ function handleKeystroke(event: any) {
     @apply shadow-lg;
     @apply max-h-46;
     @apply overflow-y-auto;
-    @apply border-b border-x border-divider;
+    @apply border-x border-b border-divider;
 
     top: calc(100% + 1px);
     border-radius: 0 0 8px 8px;
@@ -204,7 +216,7 @@ function handleKeystroke(event: any) {
     li {
       @apply w-full;
       @apply block;
-      @apply py-2 px-4;
+      @apply px-4 py-2;
       @apply text-secondary;
       @apply font-semibold;
 
