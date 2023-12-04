@@ -1,5 +1,5 @@
-import { Config } from "tailwindcss";
-import { theme } from 'tailwindcss/defaultConfig'
+import { Config } from "tailwindcss"
+import { theme } from "tailwindcss/defaultConfig"
 
 export default {
   content: [],
@@ -14,9 +14,11 @@ export default {
         upperTertiaryStickyFold: "var(--upper-tertiary-sticky-fold)",
         upperFourthStickyFold: "var(--upper-fourth-sticky-fold)",
         upperMobilePrimaryStickyFold: "var(--upper-mobile-primary-sticky-fold)",
-        upperMobileSecondaryStickyFold: "var(--upper-mobile-secondary-sticky-fold)",
+        upperMobileSecondaryStickyFold:
+          "var(--upper-mobile-secondary-sticky-fold)",
         upperMobileStickyFold: "var(--upper-mobile-sticky-fold)",
-        upperMobileTertiaryStickyFold: "var(--upper-mobile-tertiary-sticky-fold)",
+        upperMobileTertiaryStickyFold:
+          "var(--upper-mobile-tertiary-sticky-fold)",
         lowerPrimaryStickyFold: "var(--lower-primary-sticky-fold)",
         lowerSecondaryStickyFold: "var(--lower-secondary-sticky-fold)",
         lowerTertiaryStickyFold: "var(--lower-tertiary-sticky-fold)",
@@ -39,6 +41,8 @@ export default {
         divider: "var(--divider-color)",
         dividerLight: "var(--divider-light-color)",
         dividerDark: "var(--divider-dark-color)",
+        info: "var(--info-color)",
+        warning: "var(--warning-color)",
         error: "var(--error-color)",
         tooltip: "var(--tooltip-color)",
         popover: "var(--popover-color)",
@@ -96,9 +100,9 @@ export default {
         46: "11.5rem",
       },
       maxWidth: {
-        '1/2': '50%',
-        '1/3': '33%',
-        '3/4': '75%',
+        "1/2": "50%",
+        "1/3": "33%",
+        "3/4": "75%",
         46: "11.5rem",
       },
       maxHeight: {
