@@ -13,13 +13,99 @@
 
 </div>
 
-Welcome to hoppscotch-ui, a collection of presentational components for our web applications. This library is part of the hoppscotch monorepo and contains components such as buttons, spinners, modals, tabs, windows, etc.
+Welcome to hoppscotch-ui, a collection of presentational components for our web applications. This library is built using [Vue 3](https://v3.vuejs.org/) and [Tailwind CSS](https://tailwindcss.com/). Preview the components in [Histoire](https://ui.hoppscotch.io/).
+
+## Installation
+
+To install the library in your project, run the following command:
+
+```bash
+pnpm add @hoppscotch/ui
+```
+
+## Setup
+
+In your `main.ts` file, import the library and register it as a plugin:
+
+```ts
+import { createApp } from "vue"
+import App from "./App.vue"
+// Import the library
+import HoppUI from "@hoppscotch/ui"
+
+// Import the styles
+import "@hoppscotch/ui/style.css"
+
+const app = createApp(App)
+
+// Register the library as a plugin
+app.use(HoppUI)
+
+app.mount("#app")
+```
+
+The Library uses Tailwind CSS under the hood, so you have to import the preset in your `tailwind.config.ts` file:
+
+```ts
+import preset from "@hoppscotch/ui-preset"
+
+export default {
+  content: ["src/**/*.{vue,html}"],
+  presets: [preset],
+}
+```
 
 ## Usage
 
-To use the components in project, simply name the component with `directory` name as alias:
+You can use the components in your Vue templates like this:
 
-For example `Primary Button` component is in `button` directory and the file name is `Primary.vue`. So, use that you have to write `<HoppButtonPrimary />`
+```ts
+<template>
+  <HoppButtonPrimary label="Click me" />
+</template>
+
+<script lang="ts" setup>
+import { HoppButtonPrimary } from "@hoppscotch/ui"
+</script>
+```
+
+If you're using `unplugin-vue-components` in your project, you can import the components like this without having to import them in the script section:
+
+```ts
+<template>
+  <HoppButtonPrimary label="Click me" />
+</template>
+
+<script lang="ts" setup>
+</script>
+```
+
+To configure resolve options for `unplugin-vue-components`, add the following to your `vite.config.ts` file:
+
+```ts
+import { defineConfig } from "vite"
+import vue from "@vitejs/plugin-vue"
+import Components from "unplugin-vue-components/vite"
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    Components({
+      resolvers: [
+        // auto import components
+        (name) => {
+          if (name.startsWith("Hopp")) {
+            return {
+              importName: name,
+              path: "@hoppscotch/ui",
+            }
+          }
+        },
+      ],
+    }),
+  ],
+})
+```
 
 ## Histoire
 
