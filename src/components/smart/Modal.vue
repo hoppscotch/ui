@@ -2,7 +2,7 @@
   <Transition name="fade" appear @leave="onTransitionLeaveStart">
     <div
       ref="modal"
-      class="fixed inset-0 z-50 overflow-y-auto transition"
+      class="fixed inset-0 z-[1000] overflow-y-auto transition"
       role="dialog"
     >
       <div
@@ -32,19 +32,22 @@
         <Transition name="bounce" appear>
           <div
             class="inline-block w-full transform overflow-hidden border-dividerDark bg-primary text-left align-bottom shadow-lg transition-all sm:rounded-xl sm:border sm:align-middle"
-            :class="[{ 'mt-24 md:mb-8': placement === 'top' }, styles]"
+            :class="[{ 'mt-16 md:mb-8': placement === 'top' }, styles]"
           >
             <div
               v-if="title"
               class="flex items-center justify-between border-b border-dividerLight"
               :class="{ 'p-4': !fullWidth }"
             >
-              <h3 class="heading" :class="{ 'ml-4': !fullWidth }">
-                {{ title }}
-              </h3>
-              <span class="flex items-center">
+              <div class="flex items-center flex-1 justify-start">
                 <slot name="actions"></slot>
-                <kbd class="shortcut-key mr-2">ESC</kbd>
+              </div>
+              <div class="flex items-center justify-center">
+                <h3 class="heading">
+                  {{ title }}
+                </h3>
+              </div>
+              <div class="flex items-center flex-1 justify-end">
                 <HoppButtonSecondary
                   v-if="dimissible"
                   v-tippy="{ theme: 'tooltip', delay: [500, 20] }"
@@ -52,11 +55,11 @@
                   :icon="IconX"
                   @click="close"
                 />
-              </span>
+              </div>
             </div>
             <div
-              class="max-h-lg flex flex-col overflow-y-auto"
-              :class="{ 'p-4': !fullWidth }"
+              class="flex flex-col overflow-y-auto max-h-[55vh]"
+              :class="{ 'p-4': !fullWidth && !fullWidthBody }"
             >
               <slot name="body"></slot>
             </div>
@@ -114,6 +117,7 @@ withDefaults(
     dimissible: boolean
     placement: string
     fullWidth: boolean
+    fullWidthBody: boolean
     styles: string
     closeText: string | null
   }>(),
@@ -123,6 +127,7 @@ withDefaults(
     dimissible: true,
     placement: "top",
     fullWidth: false,
+    fullWidthBody: false,
     styles: "sm:max-w-lg",
     closeText: null,
   }

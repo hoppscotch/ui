@@ -1,9 +1,9 @@
 <template>
   <span
-    class="inline-flex items-center justify-center space-x-1 rounded bg-primaryDark px-2"
+    class="inline-flex items-center space-x-1 justify-center rounded px-2 bg-primaryDark"
   >
-    <IconLucideFile class="svg-icons opacity-75" />
-    <span class="max-w-54 truncate"><slot></slot></span>
+    <IconLucideFile class="opacity-75 svg-icons" />
+    <span class="truncate max-w-[16rem]"><slot></slot></span>
   </span>
 </template>
 

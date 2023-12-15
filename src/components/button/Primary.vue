@@ -2,7 +2,7 @@
   <HoppSmartLink
     :to="to"
     :blank="blank"
-    class="button-primary relative inline-flex items-center justify-center whitespace-nowrap py-2 font-semibold transition focus:outline-none focus-visible:bg-accentDark"
+    class="relative inline-flex items-center justify-center whitespace-nowrap py-2 font-semibold transition focus:outline-none focus-visible:bg-accentDark"
     :exact="exact"
     :class="[
       color
@@ -40,7 +40,7 @@
           label ? (reverse ? 'ml-2' : 'mr-2') : '',
         ]"
       />
-      <div class="max-w-54 truncate">
+      <div class="max-w-[16rem] truncate">
         {{ label }}
       </div>
       <div v-if="shortcut.length" class="<sm:hidden">
