@@ -106,7 +106,7 @@
       "import": "./dist/ui-preset.js",
       "require": "./dist/ui-preset.js"
     },
-    "./helpers/treeAdapter.ts": "./src/helpers/treeAdapter.ts"
+    "./helpers/treeAdapter": "./src/helpers/treeAdapter.ts"
   },
   "types": "./dist/index.d.ts"
 }
