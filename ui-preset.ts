@@ -8,24 +8,6 @@ export default {
       center: true,
     },
     extend: {
-      inset: {
-        upperPrimaryStickyFold: "var(--upper-primary-sticky-fold)",
-        upperSecondaryStickyFold: "var(--upper-secondary-sticky-fold)",
-        upperTertiaryStickyFold: "var(--upper-tertiary-sticky-fold)",
-        upperFourthStickyFold: "var(--upper-fourth-sticky-fold)",
-        upperMobilePrimaryStickyFold: "var(--upper-mobile-primary-sticky-fold)",
-        upperMobileSecondaryStickyFold:
-          "var(--upper-mobile-secondary-sticky-fold)",
-        upperMobileStickyFold: "var(--upper-mobile-sticky-fold)",
-        upperMobileTertiaryStickyFold:
-          "var(--upper-mobile-tertiary-sticky-fold)",
-        lowerPrimaryStickyFold: "var(--lower-primary-sticky-fold)",
-        lowerSecondaryStickyFold: "var(--lower-secondary-sticky-fold)",
-        lowerTertiaryStickyFold: "var(--lower-tertiary-sticky-fold)",
-        lowerFourthStickyFold: "var(--lower-fourth-sticky-fold)",
-        sidebarPrimaryStickyFold: "var(--sidebar-primary-sticky-fold)",
-        sidebarSecondaryStickyFold: "var(--line-height-body)",
-      },
       colors: {
         primary: "var(--primary-color)",
         primaryLight: "var(--primary-light-color)",
@@ -41,9 +23,9 @@ export default {
         divider: "var(--divider-color)",
         dividerLight: "var(--divider-light-color)",
         dividerDark: "var(--divider-dark-color)",
-        info: "var(--info-color)",
-        warning: "var(--warning-color)",
-        error: "var(--error-color)",
+        bannerInfo: "var(--banner-info-color)",
+        bannerWarning: "var(--banner-warning-color)",
+        bannerError: "var(--banner-error-color)",
         tooltip: "var(--tooltip-color)",
         popover: "var(--popover-color)",
         gradientFrom: "var(--gradient-from-color)",
@@ -68,7 +50,6 @@ export default {
       fontFamily: {
         sans: "var(--font-sans)",
         mono: "var(--font-mono)",
-        icon: "var(--font-icon)",
       },
       fontSize: {
         tiny: "var(--font-size-tiny)",
@@ -114,15 +95,9 @@ export default {
       backgroundOpacity: {
         15: "0.15",
       },
-    },
-    screens: {
-      sm: "639px",
-      "<2xl": { max: "1536px" },
-      "<xl": { max: "1280px" },
-      "<lg": { max: "1024px" },
-      "<md": { max: "768px" },
-      "<sm": { max: "640px" },
-      ...theme?.screens,
+      screens: {
+        "<sm": { max: "640px" },
+      },
     },
   },
 } satisfies Config
