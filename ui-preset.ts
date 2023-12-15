@@ -1,5 +1,4 @@
 import { Config } from "tailwindcss"
-import { theme } from "tailwindcss/defaultConfig"
 
 export default {
   content: [],
