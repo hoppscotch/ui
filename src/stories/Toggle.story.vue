@@ -1,5 +1,5 @@
 <template>
-  <Story title="Toggle">
+  <Story group="components" title="Toggle">
     <HoppSmartToggle :on="on" @change="change"> Turn on </HoppSmartToggle>
   </Story>
 </template>

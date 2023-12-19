@@ -1,5 +1,5 @@
 <template>
-  <Story title="Checkbox">
+  <Story group="components" title="Checkbox">
     <Variant title="Single">
       <HoppSmartCheckbox :on="on" />
     </Variant>

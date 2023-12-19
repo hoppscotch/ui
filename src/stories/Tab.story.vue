@@ -1,5 +1,5 @@
 <template>
-  <Story title="Tab">
+  <Story group="components" title="Tab">
     <Variant title="Single">
       <HoppSmartTabs id="my-tab" v-model="selectedTab" render-inactive-tabs>
         <HoppSmartTab id="tab1" label="Tab 1">

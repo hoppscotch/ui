@@ -1,5 +1,5 @@
 <template>
-  <Story title="Slider Over">
+  <Story group="components" title="Slider Over">
     <HoppSmartSlideOver :show="show" :title="'Title'" @close="show = false">
       <template #content>
         <h1>Content</h1>

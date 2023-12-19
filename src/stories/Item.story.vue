@@ -1,5 +1,5 @@
 <template>
-  <Story title="Item">
+  <Story group="components" title="Item">
     <Variant title="Single">
       <HoppSmartItem :label="'Item'" :active-info-icon="false" />
     </Variant>

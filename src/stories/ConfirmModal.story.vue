@@ -1,7 +1,11 @@
 <template>
-  <Story title="Confirm Modal">
-    <HoppSmartConfirmModal :show="show" :title="'Confirm Modal'" @hide-modal="show = false"
-      @resolve="resolveConfirmModal" />
+  <Story group="components" title="Confirm Modal">
+    <HoppSmartConfirmModal
+      :show="show"
+      :title="'Confirm Modal'"
+      @hide-modal="show = false"
+      @resolve="resolveConfirmModal"
+    />
   </Story>
 </template>
 

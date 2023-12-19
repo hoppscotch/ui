@@ -1,16 +1,16 @@
 <template>
-  <Story title="Anchor">
-    <div class="text-secondaryLight text-tiny">
+  <Story group="components" title="Anchor">
+    <div class="text-tiny text-secondaryLight">
       By signing in, you are agreeing to our
       <HoppSmartAnchor
-        class="text-red-800 link"
+        class="link text-red-800"
         to="https://docs.hoppscotch.io/support/terms"
         blank
         label="Terms of Service"
       />
       and
       <HoppSmartAnchor
-        class="text-red-600 link"
+        class="link text-red-600"
         to="https://docs.hoppscotch.io/support/privacy"
         blank
         label="Privacy Policy"

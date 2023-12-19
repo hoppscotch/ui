@@ -1,5 +1,5 @@
 <template>
-  <Story title="Table">
+  <Story group="components" title="Table">
     <Variant title="General">
       <HoppSmartTable :list="list" :headings="headings" />
     </Variant>
@@ -7,7 +7,7 @@
       <HoppSmartTable>
         <template #head>
           <tr
-            class="text-secondary border-b border-dividerDark text-sm text-left bg-primaryLight"
+            class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
           >
             <th
               v-for="heading in headings"
@@ -24,12 +24,12 @@
           <tr
             v-for="item in list"
             :key="item.id"
-            class="text-secondaryDark hover:bg-divider hover:cursor-pointer rounded-xl"
+            class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
           >
             <td
               v-for="cellHeading in headings"
               :key="cellHeading.key"
-              class="max-w-[10rem] pl-6 py-1"
+              class="max-w-[10rem] py-1 pl-6"
             >
               {{ item[cellHeading.key] ?? "-" }}
             </td>

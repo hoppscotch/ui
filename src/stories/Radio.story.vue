@@ -1,5 +1,5 @@
 <template>
-  <Story title="Radio">
+  <Story group="components" title="Radio">
     <Variant title="Single">
       <HoppSmartRadio />
     </Variant>

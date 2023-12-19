@@ -1,5 +1,12 @@
 <template>
-  <Story title="Button">
+  <Story
+    group="components"
+    title="Button"
+    :layout="{
+      type: 'grid',
+      width: 200,
+    }"
+  >
     <Variant title="Primary">
       <HoppButtonPrimary label="Button" />
     </Variant>

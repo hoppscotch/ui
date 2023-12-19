@@ -1,5 +1,5 @@
 <template>
-  <Story title="Link">
+  <Story group="components" title="Link">
     <Variant title="Text Link">
       <HoppSmartLink :to="link" :blank="true"> Click here </HoppSmartLink>
     </Variant>

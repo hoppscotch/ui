@@ -1,5 +1,5 @@
 <template>
-  <Story title="Spinner">
+  <Story group="components" title="Spinner">
     <HoppSmartSpinner />
   </Story>
 </template>

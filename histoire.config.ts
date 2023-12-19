@@ -1,7 +1,15 @@
 import { HstVue } from "@histoire/plugin-vue"
-import { defineConfig } from "histoire"
+import { defineConfig, getDefaultConfig } from "histoire"
 
 export default defineConfig({
+  backgroundPresets: [
+    ...(getDefaultConfig().backgroundPresets || []),
+    {
+      label: "Gray",
+      color: "#cafff5",
+      contrastColor: "#005142",
+    },
+  ],
   theme: {
     title: "Hoppscotch Design • Hoppscotch",
     logo: {
@@ -15,4 +23,16 @@ export default defineConfig({
   setupFile: "histoire.setup.ts",
   plugins: [HstVue()],
   viteIgnorePlugins: ["vite:dts"],
+  tree: {
+    groups: [
+      {
+        id: "top",
+        title: "",
+      },
+      {
+        id: "components",
+        title: "Components",
+      },
+    ],
+  },
 })
