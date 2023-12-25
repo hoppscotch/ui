@@ -31,7 +31,7 @@
         >
         <Transition name="bounce" appear>
           <div
-            class="inline-block w-full transform overflow-hidden border-dividerDark bg-primary text-left align-bottom shadow-lg transition-all sm:rounded-xl sm:border sm:align-middle"
+            class="inline-block w-full overflow-hidden text-left align-bottom shadow-lg transform border-dividerDark bg-primary transition-all sm:rounded-xl sm:border sm:align-middle"
             :class="[{ 'mt-16 md:mb-8': placement === 'top' }, styles]"
           >
             <div
@@ -39,7 +39,7 @@
               class="flex items-center justify-between border-b border-dividerLight"
               :class="{ 'p-4': !fullWidth }"
             >
-              <div class="flex items-center flex-1 justify-start">
+              <div class="flex items-center justify-start flex-1">
                 <slot name="actions"></slot>
               </div>
               <div class="flex items-center justify-center">
@@ -47,7 +47,7 @@
                   {{ title }}
                 </h3>
               </div>
-              <div class="flex items-center flex-1 justify-end">
+              <div class="flex items-center justify-end flex-1">
                 <HoppButtonSecondary
                   v-if="dimissible"
                   v-tippy="{ theme: 'tooltip', delay: [500, 20] }"
@@ -58,14 +58,14 @@
               </div>
             </div>
             <div
-              class="flex flex-col overflow-y-auto max-h-[55vh]"
+              class="flex max-h-[55vh] flex-col overflow-y-auto"
               :class="{ 'p-4': !fullWidth && !fullWidthBody }"
             >
               <slot name="body"></slot>
             </div>
             <div
               v-if="hasFooterSlot"
-              class="flex flex-1 items-center justify-between border-t border-dividerLight bg-primaryContrast"
+              class="flex items-center justify-between flex-1 border-t border-dividerLight bg-primaryContrast"
               :class="{ 'p-4': !fullWidth }"
             >
               <slot name="footer"></slot>
@@ -130,7 +130,7 @@ withDefaults(
     fullWidthBody: false,
     styles: "sm:max-w-lg",
     closeText: null,
-  }
+  },
 )
 
 const emit = defineEmits<{

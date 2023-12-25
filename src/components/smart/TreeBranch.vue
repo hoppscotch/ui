@@ -20,7 +20,7 @@
     ></div>
     <div
       v-if="childNodes.status === 'loaded' && childNodes.data.length > 0"
-      class="flex flex-1 flex-col truncate"
+      class="flex flex-col flex-1 truncate"
       :class="{
         'bg-divider': highlightNode,
       }"
@@ -58,14 +58,14 @@
 
     <div
       v-if="childNodes.status === 'loading'"
-      class="flex flex-1 flex-col items-center justify-center p-4"
+      class="flex flex-col items-center justify-center flex-1 p-4"
     >
       <SmartSpinner class="my-4" />
       <span class="text-secondaryLight">{{ t?.("state.loading") }}</span>
     </div>
     <div
       v-if="childNodes.status === 'loaded' && childNodes.data.length === 0"
-      class="flex flex-1 flex-col"
+      class="flex flex-col flex-1"
     >
       <slot name="emptyNode" :node="nodeItem"></slot>
     </div>
@@ -115,7 +115,7 @@ const highlightNode = ref(false)
  * Fetch the child nodes from the adapter by passing the node id of the current node
  */
 const childNodes = computed(
-  () => props.adapter.getChildren(props.nodeItem.id).value
+  () => props.adapter.getChildren(props.nodeItem.id).value,
 )
 
 const toggleNodeChildren = () => {

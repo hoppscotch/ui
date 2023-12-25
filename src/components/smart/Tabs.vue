@@ -1,15 +1,15 @@
 <template>
   <div
-    class="flex h-full flex-1 flex-nowrap"
+    class="flex flex-1 h-full flex-nowrap"
     :class="{ '!h-auto !flex-col': !vertical }"
   >
     <div
-      class="tabs relative border-dividerLight"
+      class="relative tabs border-dividerLight"
       :class="[vertical ? 'border-r' : 'border-b', styles]"
     >
       <div class="flex flex-1">
         <div
-          class="flex flex-1 justify-between"
+          class="flex justify-between flex-1"
           :class="{ 'flex-col': vertical }"
         >
           <div class="flex" :class="{ 'flex-col space-y-2 p-2': vertical }">
@@ -48,7 +48,7 @@
               </span>
               <span
                 v-if="tabMeta.indicator"
-                class="ml-2 h-1 w-1 rounded-full bg-accentLight"
+                class="w-1 h-1 ml-2 rounded-full bg-accentLight"
               ></span>
             </button>
           </div>
@@ -59,7 +59,7 @@
       </div>
     </div>
     <div
-      class="contents h-full w-full"
+      class="w-full h-full contents"
       :class="[
         {
           '!flex flex-1 flex-col overflow-y-auto': vertical,
@@ -136,7 +136,7 @@ const addTabEntry = (tabID: string, meta: TabMeta) => {
     tabEntries.value,
     O.fromPredicate(not(A.exists(([id]) => id === tabID))),
     O.map(A.append([tabID, meta] as [string, TabMeta])),
-    O.getOrElseW(() => throwError(`Tab with duplicate ID created: '${tabID}'`))
+    O.getOrElseW(() => throwError(`Tab with duplicate ID created: '${tabID}'`)),
   )
 }
 
@@ -147,10 +147,10 @@ const updateTabEntry = (tabID: string, newMeta: TabMeta) => {
     O.chain((index) =>
       pipe(
         tabEntries.value,
-        A.updateAt(index, [tabID, newMeta] as [string, TabMeta])
-      )
+        A.updateAt(index, [tabID, newMeta] as [string, TabMeta]),
+      ),
     ),
-    O.getOrElseW(() => throwError(`Failed to update tab entry: ${tabID}`))
+    O.getOrElseW(() => throwError(`Failed to update tab entry: ${tabID}`)),
   )
 }
 
@@ -159,7 +159,7 @@ const removeTabEntry = (tabID: string) => {
     tabEntries.value,
     A.findIndex(([id]) => id === tabID),
     O.chain((index) => pipe(tabEntries.value, A.deleteAt(index))),
-    O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`))
+    O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`)),
   )
 
   // If we tried to remove the active tabEntries, switch to first tab entry

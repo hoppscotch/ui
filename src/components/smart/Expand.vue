@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative flex flex-col space-y-2 overflow-hidden"
+    class="relative flex flex-col overflow-hidden space-y-2"
     :class="expand ? 'h-full' : 'max-h-32'"
   >
     <slot name="body"></slot>
@@ -41,6 +41,6 @@ withDefaults(
   {
     less: "Less",
     more: "More",
-  }
+  },
 )
 </script>

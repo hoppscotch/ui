@@ -1,7 +1,7 @@
 <template>
   <div
     tabindex="0"
-    class="relative rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring focus-visible:ring-primaryDark"
+    class="relative flex items-center justify-center rounded-full cursor-pointer focus:outline-none focus-visible:ring focus-visible:ring-primaryDark"
   >
     <Avatar
       :size="size"
@@ -12,7 +12,7 @@
     />
     <span
       v-if="indicator"
-      class="border-primary rounded-full border-2 h-2.5 -top-0.5 -right-0.5 w-2.5 absolute"
+      class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-primary"
       :class="indicatorStyles"
     ></span>
   </div>
@@ -33,6 +33,6 @@ withDefaults(
     indicator: false,
     indicatorStyles: "bg-green-500",
     size: 22,
-  }
+  },
 )
 </script>

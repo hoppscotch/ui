@@ -8,7 +8,7 @@
       color
         ? `text-${color}-500 hover:text-${color}-600 focus-visible:text-${color}-600`
         : 'hover:text-secondaryDark focus-visible:text-secondaryDark',
-      { 'opacity-75 cursor-not-allowed': disabled },
+      { 'cursor-not-allowed opacity-75': disabled },
       { 'flex-row-reverse': reverse },
     ]"
     :disabled="disabled"
@@ -50,6 +50,6 @@ withDefaults(
     color: "",
     disabled: false,
     reverse: false,
-  }
+  },
 )
 </script>

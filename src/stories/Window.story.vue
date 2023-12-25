@@ -1,10 +1,20 @@
 <template>
   <Story title="Window">
     <Variant title="Single">
-      <HoppSmartWindows :id="'my-window'" v-model="selectedWindow" @add-tab="openNewTab" @remove-tab="removeTab"
-        @sort="sortTabs">
-        <HoppSmartWindow v-for="window in tabs" :id="window.id" :key="'tab_' + window.id" :label="window.name"
-          :is-removable="window.removable">
+      <HoppSmartWindows
+        :id="'my-window'"
+        v-model="selectedWindow"
+        @add-tab="openNewTab"
+        @remove-tab="removeTab"
+        @sort="sortTabs"
+      >
+        <HoppSmartWindow
+          v-for="window in tabs"
+          :id="window.id"
+          :key="'tab_' + window.id"
+          :label="window.name"
+          :is-removable="window.removable"
+        >
         </HoppSmartWindow>
       </HoppSmartWindows>
     </Variant>
@@ -23,7 +33,8 @@
           :is-removable="window.removable"
         >
           <template #tabhead>
-            <icon-lucide-train class="svg-icons" /> <span class="truncate w-2"> - Lorem ipsum dolor sit amet</span>
+            <icon-lucide-train class="svg-icons" />
+            <span class="w-2 truncate"> - Lorem ipsum dolor sit amet</span>
           </template>
         </HoppSmartWindow>
       </HoppSmartWindows>

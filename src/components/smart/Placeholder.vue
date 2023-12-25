@@ -5,16 +5,16 @@
       :src="src"
       loading="lazy"
       class="inline-flex flex-col object-contain object-center"
-      :class="large ? 'w-32 h-32' : 'w-16 h-16'"
+      :class="large ? 'h-32 w-32' : 'h-16 w-16'"
       :alt="alt"
     />
     <slot name="icon"></slot>
-    <span v-if="heading" class="font-semibold mt-2 text-center">
+    <span v-if="heading" class="mt-2 font-semibold text-center">
       {{ heading }}
     </span>
     <span
       v-if="text"
-      class="max-w-sm mt-2 text-center whitespace-normal text-secondaryLight text-tiny"
+      class="max-w-sm mt-2 text-center whitespace-normal text-tiny text-secondaryLight"
     >
       {{ text }}
     </span>
@@ -38,7 +38,7 @@ withDefaults(
   {
     alt: "",
     text: "",
-  }
+  },
 )
 
 const slots = useSlots()

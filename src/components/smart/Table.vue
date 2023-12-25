@@ -1,10 +1,10 @@
 <template>
-  <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
+  <div class="overflow-auto border shadow-md rounded-md border-dividerDark">
     <table class="w-full">
       <thead>
         <slot name="head">
           <tr
-            class="text-secondary border-b border-dividerDark text-sm text-left bg-primaryLight"
+            class="text-sm text-left border-b border-dividerDark bg-primaryLight text-secondary"
           >
             <th v-for="th in headings" scope="col" class="px-6 py-3">
               {{ th.label ?? th.key }}
@@ -19,14 +19,14 @@
           <tr
             v-for="(rowData, rowIndex) in list"
             :key="rowIndex"
-            class="text-secondaryDark hover:bg-divider hover:cursor-pointer rounded-xl"
+            class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
             :class="{ 'divide-x divide-divider': showYBorder }"
           >
             <td
               v-for="cellHeading in headings"
               :key="cellHeading.key"
               @click="!cellHeading.preventClick && onRowClicked(rowData)"
-              class="max-w-[10rem] pl-6 py-1"
+              class="max-w-[10rem] py-1 pl-6"
             >
               <!-- Dynamic column slot -->
               <slot :name="cellHeading.key" :item="rowData">

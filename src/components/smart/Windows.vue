@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col flex-1 h-auto overflow-y-hidden flex-nowrap">
     <div
-      class="sticky top-0 z-10 flex-shrink-0 overflow-x-auto divide-x divide-dividerLight bg-primaryLight tabs group-tabs"
+      class="sticky top-0 z-10 flex-shrink-0 overflow-x-auto tabs group-tabs divide-x divide-dividerLight bg-primaryLight"
     >
       <div
         class="flex flex-1 flex-shrink-0 w-0 overflow-hidden"
@@ -17,7 +17,7 @@
               :list="tabEntries"
               :style="tabStyles"
               :item-key="'window-'"
-              class="flex flex-shrink-0 overflow-x-auto transition divide-x divide-dividerLight"
+              class="flex flex-shrink-0 overflow-x-auto divide-x divide-dividerLight transition"
               @sort="sortTabs"
             >
               <template #item="{ element: [tabID, tabMeta] }">
@@ -67,7 +67,7 @@
                       { active: modelValue === tabID },
                       {
                         flex: tabMeta.closeVisibility === 'always',
-                        'group-hover:flex hidden':
+                        'hidden group-hover:flex':
                           tabMeta.closeVisibility === 'hover',
                         hidden: tabMeta.closeVisibility === 'never',
                       },
@@ -81,17 +81,17 @@
             </draggable>
           </div>
           <div
-            class="sticky right-0 flex items-center justify-center flex-shrink-0 overflow-x-auto z-20"
+            class="sticky right-0 z-20 flex items-center justify-center flex-shrink-0 overflow-x-auto"
           >
             <span
               v-if="canAddNewTab"
-              class="flex items-center justify-center h-full px-3 bg-primaryLight z-[8]"
+              class="z-[8] flex h-full items-center justify-center bg-primaryLight px-3"
             >
               <HoppButtonSecondary
                 v-tippy="{ theme: 'tooltip' }"
                 :title="newText ?? t?.('action.new') ?? 'New'"
                 :icon="IconPlus"
-                class="rounded create-new-tab !text-secondaryDark !p-1"
+                class="create-new-tab rounded !p-1 !text-secondaryDark"
                 filled
                 @click="addTab"
               />
@@ -193,7 +193,7 @@ const props = withDefaults(
     canAddNewTab: true,
     newText: null,
     closeText: null,
-  }
+  },
 )
 
 const emit = defineEmits<{
@@ -233,7 +233,7 @@ const addTabEntry = (tabID: string, meta: TabMeta) => {
     tabEntries.value,
     O.fromPredicate(not(A.exists(([id]) => id === tabID))),
     O.map(A.append([tabID, meta] as [string, TabMeta])),
-    O.getOrElseW(() => throwError(`Tab with duplicate ID created: '${tabID}'`))
+    O.getOrElseW(() => throwError(`Tab with duplicate ID created: '${tabID}'`)),
   )
 }
 const updateTabEntry = (tabID: string, newMeta: TabMeta) => {
@@ -243,10 +243,10 @@ const updateTabEntry = (tabID: string, newMeta: TabMeta) => {
     O.chain((index) =>
       pipe(
         tabEntries.value,
-        A.updateAt(index, [tabID, newMeta] as [string, TabMeta])
-      )
+        A.updateAt(index, [tabID, newMeta] as [string, TabMeta]),
+      ),
     ),
-    O.getOrElseW(() => throwError(`Failed to update tab entry: ${tabID}`))
+    O.getOrElseW(() => throwError(`Failed to update tab entry: ${tabID}`)),
   )
 }
 const removeTabEntry = (tabID: string) => {
@@ -254,7 +254,7 @@ const removeTabEntry = (tabID: string) => {
     tabEntries.value,
     A.findIndex(([id]) => id === tabID),
     O.chain((index) => pipe(tabEntries.value, A.deleteAt(index))),
-    O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`))
+    O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`)),
   )
 }
 const sortTabs = (e: {
@@ -333,7 +333,7 @@ watch(
 
       const changeThumbPosition: IntersectionObserverCallback = (
         entries,
-        observer
+        observer,
       ) => {
         entries.forEach((entry) => {
           if (entry.target === element && entry.intersectionRatio >= 1.0) {
@@ -361,7 +361,7 @@ watch(
       element?.scrollIntoView({ behavior: "smooth", inline: "center" })
     })
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

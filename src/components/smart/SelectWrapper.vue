@@ -1,6 +1,6 @@
 <template>
   <div class="select-wrapper">
-    <span class="down-icon text-xs">
+    <span class="text-xs down-icon">
       <IconChevronDown />
     </span>
     <slot />
@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import IconChevronDown from '~icons/lucide/chevron-down'
+import IconChevronDown from "~icons/lucide/chevron-down"
 </script>
 
 <style scoped lang="scss">
