@@ -31,7 +31,7 @@ In your `main.ts` file, import the library and register it as a plugin:
 import { createApp } from "vue"
 import App from "./App.vue"
 // Import the library
-import HoppUI from "@hoppscotch/ui"
+import { plugin } from "@hoppscotch/ui"
 
 // Import the styles
 import "@hoppscotch/ui/style.css"
@@ -39,7 +39,7 @@ import "@hoppscotch/ui/style.css"
 const app = createApp(App)
 
 // Register the library as a plugin
-app.use(HoppUI)
+app.use(plugin)
 
 app.mount("#app")
 ```
@@ -47,7 +47,7 @@ app.mount("#app")
 The Library uses Tailwind CSS under the hood, so you have to import the preset in your `tailwind.config.ts` file:
 
 ```ts
-import preset from "@hoppscotch/ui-preset"
+import preset from "@hoppscotch/ui/ui-preset"
 
 export default {
   content: ["src/**/*.{vue,html}"],
