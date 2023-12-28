@@ -28,3 +28,5 @@ export const plugin: Plugin = {
     app.provide(HOPP_UI_OPTIONS, options)
   },
 }
+
+export default plugin

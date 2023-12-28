@@ -47,7 +47,7 @@ app.mount("#app")
 The Library uses Tailwind CSS under the hood, so you have to import the preset in your `tailwind.config.ts` file:
 
 ```ts
-import preset from "@hoppscotch/ui-preset"
+import preset from "@hoppscotch/ui/ui-preset"
 
 export default {
   content: ["src/**/*.{vue,html}"],
