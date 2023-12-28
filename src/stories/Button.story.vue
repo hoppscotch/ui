@@ -13,6 +13,12 @@
     <Variant title="Secondary">
       <HoppButtonSecondary label="Button" />
     </Variant>
+    <Variant title="Primary Icon Button">
+      <HoppButtonPrimary label="Button" />
+    </Variant>
+    <Variant title="Secondary Icon Button">
+      <HoppButtonSecondary label="Button" />
+    </Variant>
   </Story>
 </template>
 
