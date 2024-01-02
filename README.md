@@ -31,7 +31,7 @@ In your `main.ts` file, import the library and register it as a plugin:
 import { createApp } from "vue"
 import App from "./App.vue"
 // Import the library
-import HoppUI from "@hoppscotch/ui"
+import { plugin as HoppUI } from "@hoppscotch/ui"
 
 // Import the styles
 import "@hoppscotch/ui/style.css"
