@@ -58,7 +58,7 @@
               </div>
             </div>
             <div
-              class="flex max-h-[55vh] flex-col overflow-y-auto"
+              class="flex max-h-[60vh] flex-col overflow-y-auto"
               :class="{ 'p-4': !fullWidth && !fullWidthBody }"
             >
               <slot name="body"></slot>
