@@ -1,13 +1,19 @@
 <template>
   <Story title="Table">
     <Variant title="General">
-      <HoppSmartTable :list="list" :headings="headings" />
+      <HoppSmartTable
+        :headings="headings"
+        :list="list"
+        :checkbox="true"
+        :search="true"
+        :sort="{ key: 'name', direction: 'ascending' }"
+      />
     </Variant>
     <Variant title="Custom">
-      <HoppSmartTable>
+      <HoppSmartTable :list="list">
         <template #head>
           <tr
-            class="text-sm text-left border-b border-dividerDark bg-primaryLight text-secondary"
+            class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
           >
             <th
               v-for="heading in headings"
@@ -54,16 +60,16 @@ const headings: CellHeading[] = [
 
 const list: Record<string, string | number>[] = [
   {
-    id: "123455",
-    name: "Joel",
-    members: 10,
-    role: "Frontend Engineer",
+    id: "123456",
+    name: "Walter",
+    members: 12,
+    role: "Chemical Engineer",
   },
   {
-    id: "123456",
-    name: "Anwar",
-    members: 12,
-    role: "Frontend Engineer",
+    id: "123455",
+    name: "Jesse",
+    members: 10,
+    role: "Lab Assistant",
   },
 ]
 </script>
