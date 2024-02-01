@@ -30,14 +30,14 @@
       <tbody class="divide-y divide-divider">
         <slot name="body" :list="list">
           <tr
-            v-for="(rowData, rowIndex) in list"
+            v-for="(rowData, rowIndex) in finalList"
             :key="rowIndex"
             class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
             :class="{ 'divide-x divide-divider': showYBorder }"
           >
             <td v-if="checkbox" class="my-auto pl-6">
               <input
-                v-model="rowData.selected"
+                v-model="isAllRowsSelected"
                 type="checkbox"
                 @click.stop="toggleRow(rowData)"
               />
@@ -67,7 +67,7 @@
 
 <script lang="ts" setup>
 import { useVModel } from "@vueuse/core"
-import { Ref, onMounted, ref, watch } from "vue"
+import { Ref, computed, onMounted, ref, watch } from "vue"
 
 export type CellHeading = {
   key: string
@@ -126,6 +126,8 @@ const selectedRows: Ref<Item[]> = ref([])
 
 onMounted(() => {
   if (props.checkbox) {
+    console.log(props.checkbox)
+
     finalList.value = finalList.value.map((item) => ({
       ...item,
       selected: false,
@@ -135,6 +137,7 @@ onMounted(() => {
 
 const toggleRow = (item: Item) => {
   item.selected = !item.selected
+  console.log(item)
   selectedRows.value = item.selected
     ? [...selectedRows.value, item]
     : selectedRows.value.filter((row) => row !== item)
@@ -143,12 +146,25 @@ const toggleRow = (item: Item) => {
 
 const selectAllCheckbox = ref<HTMLInputElement | null>(null)
 
+const isAllRowsSelected = computed(() => {
+  return (
+    finalList.value.length > 0 &&
+    selectedRows.value.length === finalList.value.length
+  )
+})
+
 const toggleAllRows = () => {
   const isChecked = selectAllCheckbox.value?.checked
   finalList.value.forEach((item) => (item.selected = isChecked))
   selectedRows.value = isChecked ? finalList.value : []
+  console.log(finalList.value)
+  console.log(selectedRows.value)
   emit("onRowToggled", selectedRows.value)
 }
+
+watch(isAllRowsSelected, (newValue) => {
+  console.log("isAllRowsSelected", newValue)
+})
 
 // Sort List by key and direction which can set to ascending or descending
 export type Direction = "ascending" | "descending"
