@@ -5,41 +5,31 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
-        :search="true"
+        :search-bar="{ debounce: 200 }"
         :sort="{ key: 'name', direction: 'ascending' }"
       />
     </Variant>
     <Variant title="Custom">
       <HoppSmartTable :list="list">
         <template #head>
-          <tr
-            class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
+          <th
+            v-for="heading in headings"
+            :key="heading.key"
+            scope="col"
+            class="px-6 py-3"
           >
-            <th
-              v-for="heading in headings"
-              :key="heading.key"
-              scope="col"
-              class="px-6 py-3"
-            >
-              {{ heading.label }}
-            </th>
-          </tr>
+            {{ heading.label }}
+          </th>
         </template>
 
-        <template #body>
-          <tr
-            v-for="item in list"
-            :key="item.id"
-            class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
+        <template #body="{ row }">
+          <td
+            v-for="cellHeading in headings"
+            :key="cellHeading.key"
+            class="max-w-[10rem] py-1 pl-6"
           >
-            <td
-              v-for="cellHeading in headings"
-              :key="cellHeading.key"
-              class="max-w-[10rem] py-1 pl-6"
-            >
-              {{ item[cellHeading.key] ?? "-" }}
-            </td>
-          </tr>
+            {{ row[cellHeading.key] ?? "-" }}
+          </td>
         </template>
       </HoppSmartTable>
     </Variant>
