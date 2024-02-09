@@ -24,7 +24,7 @@
   </div>
 
   <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
-    <div v-if="searchBar" class="flex w-full items-center">
+    <div v-if="searchBar" class="flex w-full items-center bg-primary">
       <icon-lucide-search class="ml-3 text-xs" />
       <input
         v-model="searchQuery"
@@ -103,6 +103,7 @@ import { isEqual } from "lodash-es"
 import { computed, ref, watch } from "vue"
 import IconLeft from "~icons/lucide/arrow-left"
 import IconRight from "~icons/lucide/arrow-right"
+import { HoppButtonSecondary } from "../button"
 
 export type CellHeading = {
   key: string

@@ -5,7 +5,8 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
-        :search-bar="{ debounce: 200 }"
+        :pagination="{ totalPages: 10 }"
+        :search-bar="{ debounce: 1000, placeholder: 'Search by name' }"
         :sort="{ key: 'name', direction: 'ascending' }"
       />
     </Variant>
