@@ -5,7 +5,8 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
-        :pagination="{ totalPages: 10 }"
+        :selected-rows="selectedRows"
+        :pagination="{ totalPages: 1 }"
         :search-bar="{ debounce: 1000, placeholder: 'Search by name' }"
         :sort="{ key: 'name', direction: 'ascending' }"
       />
@@ -38,8 +39,9 @@
 </template>
 
 <script setup lang="ts">
-import { HoppSmartTable } from "../components/smart"
+import { ref } from "vue"
 import { CellHeading } from "~/components/smart/Table.vue"
+import { HoppSmartTable } from "../components/smart"
 
 // Table Headings
 const headings: CellHeading[] = [
@@ -63,4 +65,6 @@ const list: Record<string, string | number>[] = [
     role: "Lab Assistant",
   },
 ]
+
+const selectedRows = ref<Record<string, string | number>[]>([])
 </script>
