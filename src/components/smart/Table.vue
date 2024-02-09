@@ -1,21 +1,52 @@
 <template>
-  <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
-    <input
-      v-if="searchBar"
-      v-model="searchQuery"
-      class="w-full bg-primary p-3"
-      placeholder="Search"
-    />
+  <div v-if="pagination" class="mb-3 flex justify-end">
+    <div class="flex w-min">
+      <HoppButtonSecondary
+        outline
+        filled
+        :icon="IconLeft"
+        :disabled="page === 1"
+        @click="changePage(PageDirection.Previous)"
+      />
 
-    <table class="w-full">
+      <div class="flex h-full w-10 items-center justify-center">
+        <p>{{ page }}</p>
+      </div>
+
+      <HoppButtonSecondary
+        outline
+        filled
+        :icon="IconRight"
+        :disabled="page === pagination.totalPages"
+        @click="changePage(PageDirection.Next)"
+      />
+    </div>
+  </div>
+
+  <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
+    <div v-if="searchBar" class="flex w-full items-center">
+      <icon-lucide-search class="ml-3 text-xs" />
+      <input
+        v-model="searchQuery"
+        class="h-full w-full bg-primary p-3"
+        :placeholder="searchBar.placeholder ?? 'Search...'"
+      />
+    </div>
+
+    <div v-if="isSpinnerEnabled" class="mx-auto my-3 h-5 w-5 text-center">
+      <HoppSmartSpinner />
+    </div>
+
+    <table v-else class="w-full">
       <thead>
         <tr
           class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
         >
-          <th v-if="checkbox" class="pl-6 pt-1">
+          <th v-if="checkbox" class="w-5 pl-6 pt-1">
             <input
               ref="selectAllCheckbox"
               type="checkbox"
+              :checked="areAllRowsSelected"
               @click.stop="toggleAllRows"
             />
           </th>
@@ -29,7 +60,7 @@
 
       <tbody class="divide-y divide-divider">
         <tr
-          v-for="(rowData, rowIndex) in finalList"
+          v-for="(rowData, rowIndex) in workingList"
           :key="rowIndex"
           class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
           :class="{ 'divide-x divide-divider': showYBorder }"
@@ -38,7 +69,7 @@
           <td v-if="checkbox" class="my-auto pl-6">
             <input
               type="checkbox"
-              :checked="AreAllRowsSelected"
+              :checked="isRowSelected(rowData)"
               @click.stop="toggleRow(rowData)"
             />
           </td>
@@ -68,7 +99,10 @@
 
 <script lang="ts" setup>
 import { useVModel } from "@vueuse/core"
-import { Ref, computed, onMounted, ref, watch } from "vue"
+import { isEqual } from "lodash-es"
+import { computed, ref, watch } from "vue"
+import IconLeft from "~icons/lucide/arrow-left"
+import IconRight from "~icons/lucide/arrow-right"
 
 export type CellHeading = {
   key: string
@@ -90,15 +124,24 @@ const props = withDefaults(
     searchBar?: {
       /** Whether to debounce the search query event */
       debounce?: number
+      placeholder?: string
     }
     /** Whether to show the checkbox column
      * This will be overriden if custom implementation for body slot is provided
      */
     checkbox?: boolean
+
+    selectedRows?: Item[]
     /** Whether to enable sorting */
     sort?: {
+      /** The key to sort the list by */
       key: string
       direction: Direction
+    }
+
+    /** Whether to enable pagination */
+    pagination?: {
+      totalPages: number
     }
   }>(),
   {
@@ -106,58 +149,113 @@ const props = withDefaults(
     search: undefined,
     checkbox: false,
     sort: undefined,
+    selectedRows: undefined,
   },
 )
 
 const emit = defineEmits<{
   (event: "onRowClicked", item: Item): void
-  (event: "onRowToggled", selectedRows: Item[]): void
   (event: "update:list", list: Item[]): void
   (event: "search", query: string): void
+  (event: "update:selectedRows", selectedRows: Item[]): void
+  (event: "pageNumber", page: number): void
 }>()
 
-// Final List after performing operations like sort, etc
-const finalList = useVModel(props, "list", emit)
+// Pagination functionality
+const page = ref(1)
+
+enum PageDirection {
+  Previous,
+  Next,
+}
+
+const changePage = (direction: PageDirection) => {
+  if (direction === PageDirection.Previous && page.value > 1) {
+    showSpinner(300)
+    page.value -= 1
+  } else if (
+    direction === PageDirection.Next &&
+    page.value < props.pagination!.totalPages
+  ) {
+    showSpinner(300)
+    page.value += 1
+  }
+
+  emit("pageNumber", page.value)
+}
+
+// The working version of the list that is used to perform operations upon
+const workingList = useVModel(props, "list", emit)
 
 // Checkbox functionality
-const selectedRows: Ref<Item[]> = ref([])
+const selectedRows = useVModel(props, "selectedRows", emit)
 
-onMounted(() => {
+watch(workingList.value, (updatedList) => {
   if (props.checkbox) {
-    finalList.value = finalList.value.map((item) => ({
+    updatedList = updatedList.map((item) => ({
       ...item,
       selected: false,
     }))
   }
 })
 
-const toggleRow = (item: Item) => {
-  item.selected = !item.selected
-  selectedRows.value = item.selected
-    ? [...selectedRows.value, item]
-    : selectedRows.value.filter((row) => row !== item)
-  emit("onRowToggled", selectedRows.value)
-}
-
 const onRowClicked = (item: Item) => emit("onRowClicked", item)
 
+const isRowSelected = (item: Item) => {
+  const { selected, ...data } = item
+  return selectedRows.value?.some((row) => isEqual(row, data))
+}
+
+const toggleRow = (item: Item) => {
+  item.selected = !item.selected
+  const { selected, ...data } = item
+
+  const index = selectedRows.value?.findIndex((row) => isEqual(row, data)) ?? -1
+
+  if (item.selected && !isRowSelected(data)) selectedRows.value!.push(data)
+  else if (index !== -1) selectedRows.value?.splice(index, 1)
+}
+
 const selectAllCheckbox = ref<HTMLInputElement | null>(null)
-const AreAllRowsSelected = computed(
-  () => selectedRows.value.length === finalList.value.length,
-)
 
 const toggleAllRows = () => {
   const isChecked = selectAllCheckbox.value?.checked
-  finalList.value.forEach((item) => (item.selected = isChecked))
-  selectedRows.value = isChecked ? finalList.value : []
-  emit("onRowToggled", selectedRows.value)
+  workingList.value.forEach((item) => (item.selected = isChecked))
+
+  if (isChecked) {
+    workingList.value.forEach((item) => {
+      const { selected, ...data } = item
+      if (!isRowSelected(item)) selectedRows.value!.push(data)
+    })
+  } else {
+    workingList.value.forEach((item) => {
+      const { selected, ...data } = item
+      const index =
+        selectedRows.value?.findIndex((row) => isEqual(row, data)) ?? -1
+      selectedRows.value!.splice(index, 1)
+    })
+  }
 }
+
+const areAllRowsSelected = computed(() => {
+  if (workingList.value.length === 0 || selectedRows.value?.length === 0)
+    return false
+
+  let count = 0
+  workingList.value.forEach((item) => {
+    const { selected, ...data } = item
+    if (selectedRows.value?.findIndex((row) => isEqual(row, data)) !== -1) {
+      count += 1
+    }
+  })
+  return count === workingList.value.length
+})
 
 // Sort List by key and direction which can set to ascending or descending
 export type Direction = "ascending" | "descending"
 
 const sortList = (key: string, direction: Direction) => {
-  finalList.value = finalList.value?.sort((a, b) => {
+  workingList.value = workingList.value?.sort((a, b) => {
     const valueA = a[key] as string
     const valueB = b[key] as string
     return direction === "ascending"
@@ -166,7 +264,7 @@ const sortList = (key: string, direction: Direction) => {
   })
 }
 
-onMounted(() => {
+watch(workingList.value, () => {
   if (props.sort) {
     sortList(props.sort.key, props.sort.direction)
   }
@@ -175,15 +273,24 @@ onMounted(() => {
 // Searchbar functionality with optional debouncer
 const searchQuery = ref("")
 let debounceTimeout: number
+const isSpinnerEnabled = ref(false)
 
 const debounce = (func: () => void, delay: number) => {
   clearTimeout(debounceTimeout)
   debounceTimeout = setTimeout(func, delay)
 }
 
+const showSpinner = (duration: number = 500) => {
+  isSpinnerEnabled.value = true
+  setTimeout(() => {
+    isSpinnerEnabled.value = false
+  }, duration)
+}
+
 watch(searchQuery, () => {
   if (props.searchBar?.debounce) {
     debounce(() => {
+      showSpinner()
       emit("search", searchQuery.value)
     }, props.searchBar.debounce)
   } else {
