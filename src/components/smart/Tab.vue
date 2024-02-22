@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldRender" v-show="active" class="flex flex-col flex-1">
+  <div v-if="shouldRender" v-show="active" class="flex flex-1 flex-col">
     <slot></slot>
   </div>
 </template>
@@ -24,12 +24,14 @@ const props = withDefaults(
     info?: string | null
     indicator?: boolean
     disabled?: boolean
+    alignLast?: boolean
   }>(),
   {
     icon: null,
     indicator: false,
     info: null,
     disabled: false,
+    alignLast: false,
   },
 )
 
@@ -44,6 +46,7 @@ const tabMeta = computed<TabMeta>(() => ({
   info: props.info,
   label: props.label,
   disabled: props.disabled,
+  alignLast: props.alignLast,
 }))
 
 const {

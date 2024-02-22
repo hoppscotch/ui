@@ -1,57 +1,70 @@
 <template>
   <div
-    class="flex flex-1 h-full flex-nowrap"
+    class="flex h-full flex-1 flex-nowrap"
     :class="{ '!h-auto !flex-col': !vertical }"
   >
     <div
-      class="relative tabs border-dividerLight"
+      class="tabs relative border-dividerLight"
       :class="[vertical ? 'border-r' : 'border-b', styles]"
     >
       <div class="flex flex-1">
         <div
-          class="flex justify-between flex-1"
+          class="flex flex-1 justify-between"
           :class="{ 'flex-col': vertical }"
         >
-          <div class="flex" :class="{ 'flex-col space-y-2 p-2': vertical }">
-            <button
-              v-for="([tabID, tabMeta], index) in tabEntries"
-              :key="`tab-${index}`"
-              v-tippy="{
-                theme: 'tooltip',
-                placement: 'left',
-                content: vertical ? tabMeta.label : null,
+          <template
+            v-for="(tabGroup, alignment) in alignedTabs"
+            :key="alignment"
+          >
+            <div
+              class="flex flex-1"
+              :class="{
+                'flex-col space-y-2 p-2': vertical,
+                'justify-end': alignment === 'right',
               }"
-              class="tab"
-              :class="[
-                { active: modelValue === tabID },
-                { vertical: vertical },
-                { '!cursor-not-allowed opacity-75': tabMeta.disabled },
-              ]"
-              :aria-label="tabMeta.label || ''"
-              :disabled="tabMeta.disabled"
-              role="button"
-              @keyup.enter="selectTab(tabID)"
-              @click="selectTab(tabID)"
             >
-              <component
-                :is="tabMeta.icon"
-                v-if="tabMeta.icon"
-                class="svg-icons"
-                :class="{ 'mr-2': tabMeta.label && !vertical }"
-              />
-              <span v-if="tabMeta.label && !vertical">{{ tabMeta.label }}</span>
-              <span
-                v-if="tabMeta.info && tabMeta.info !== 'null'"
-                class="tab-info"
+              <button
+                v-for="([tabID, tabMeta], index) in tabGroup"
+                :key="`tab-${index}`"
+                v-tippy="{
+                  theme: 'tooltip',
+                  placement: 'left',
+                  content: vertical ? tabMeta.label : null,
+                }"
+                class="tab"
+                :class="[
+                  { active: modelValue === tabID },
+                  { vertical: vertical },
+                  { '!cursor-not-allowed opacity-75': tabMeta.disabled },
+                ]"
+                :aria-label="tabMeta.label || ''"
+                :disabled="tabMeta.disabled"
+                role="button"
+                @keyup.enter="selectTab(tabID)"
+                @click="selectTab(tabID)"
               >
-                {{ tabMeta.info }}
-              </span>
-              <span
-                v-if="tabMeta.indicator"
-                class="w-1 h-1 ml-2 rounded-full bg-accentLight"
-              ></span>
-            </button>
-          </div>
+                <component
+                  :is="tabMeta.icon"
+                  v-if="tabMeta.icon"
+                  class="svg-icons"
+                  :class="{ 'mr-2': tabMeta.label && !vertical }"
+                />
+                <span v-if="tabMeta.label && !vertical">{{
+                  tabMeta.label
+                }}</span>
+                <span
+                  v-if="tabMeta.info && tabMeta.info !== 'null'"
+                  class="tab-info"
+                >
+                  {{ tabMeta.info }}
+                </span>
+                <span
+                  v-if="tabMeta.indicator"
+                  class="ml-2 h-1 w-1 rounded-full bg-accentLight"
+                ></span>
+              </button>
+            </div>
+          </template>
           <div class="flex items-center justify-center">
             <slot name="actions"></slot>
           </div>
@@ -59,7 +72,7 @@
       </div>
     </div>
     <div
-      class="w-full h-full contents"
+      class="contents h-full w-full"
       :class="[
         {
           '!flex flex-1 flex-col overflow-y-auto': vertical,
@@ -86,6 +99,7 @@ export type TabMeta = {
   indicator: boolean
   info: string | null
   disabled: boolean
+  alignLast: boolean
 }
 
 export type TabProvider = {
@@ -130,6 +144,13 @@ const throwError = (message: string): never => {
 }
 
 const tabEntries = ref<Array<[string, TabMeta]>>([])
+
+// Tab related logic
+const alignedTabs = computed(() => {
+  const leftTabs = tabEntries.value.filter(([_, tabMeta]) => !tabMeta.alignLast)
+  const rightTabs = tabEntries.value.filter(([_, tabMeta]) => tabMeta.alignLast)
+  return { left: leftTabs, right: rightTabs }
+})
 
 const addTabEntry = (tabID: string, meta: TabMeta) => {
   tabEntries.value = pipe(
