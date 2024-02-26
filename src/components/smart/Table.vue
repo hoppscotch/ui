@@ -25,75 +25,76 @@
 
   <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
     <div v-if="searchBar" class="flex w-full items-center bg-primary">
-      <icon-lucide-search class="ml-3 text-xs" />
+      <icon-lucide-search class="mx-3 text-xs" />
       <input
         v-model="searchQuery"
-        class="h-full w-full bg-primary p-3"
+        class="h-full w-full bg-primary py-3"
         :placeholder="searchBar.placeholder ?? 'Search...'"
       />
     </div>
-
     <div v-if="isSpinnerEnabled" class="mx-auto my-3 h-5 w-5 text-center">
       <HoppSmartSpinner />
     </div>
 
-    <table v-else-if="list" class="w-full">
-      <thead v-if="list.length > 0">
-        <tr
-          class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
-        >
-          <th v-if="checkbox" class="w-5 pl-6 pt-1">
-            <input
-              ref="selectAllCheckbox"
-              type="checkbox"
-              :checked="areAllRowsSelected"
-              @click.stop="toggleAllRows"
-            />
-          </th>
-          <slot name="head">
-            <th v-for="th in headings" scope="col" class="px-6 py-3">
-              {{ th.label ?? th.key }}
+    <div v-else-if="list" class="flex flex-1 flex-col">
+      <table class="w-full">
+        <thead v-if="list.length > 0">
+          <tr
+            class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
+          >
+            <th v-if="checkbox" class="px-5">
+              <input
+                ref="selectAllCheckbox"
+                type="checkbox"
+                :checked="areAllRowsSelected"
+                @click.stop="toggleAllRows"
+              />
             </th>
-          </slot>
-        </tr>
-      </thead>
+            <slot name="head">
+              <th v-for="th in headings" scope="col" class="px-6 py-3">
+                {{ th.label ?? th.key }}
+              </th>
+            </slot>
+          </tr>
+        </thead>
 
-      <tbody class="divide-y divide-divider">
-        <tr
-          v-for="(rowData, rowIndex) in workingList"
-          :key="rowIndex"
-          class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
-          :class="{ 'divide-x divide-divider': showYBorder }"
-          @click="onRowClicked(rowData)"
-        >
-          <td v-if="checkbox" class="my-auto pl-6">
-            <input
-              type="checkbox"
-              :checked="isRowSelected(rowData)"
-              @click.stop="toggleRow(rowData)"
-            />
-          </td>
-          <slot name="body" :row="rowData">
-            <td
-              v-for="cellHeading in headings"
-              :key="cellHeading.key"
-              @click="!cellHeading.preventClick && onRowClicked(rowData)"
-              class="max-w-[10rem] py-1 pl-6"
-            >
-              <!-- Dynamic column slot -->
-              <slot :name="cellHeading.key" :item="rowData">
-                <!-- Generic implementation of the column -->
-                <div class="flex flex-col truncate">
-                  <span class="truncate">
-                    {{ rowData[cellHeading.key] ?? "-" }}
-                  </span>
-                </div>
-              </slot>
+        <tbody class="divide-y divide-divider">
+          <tr
+            v-for="(rowData, rowIndex) in workingList"
+            :key="rowIndex"
+            class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
+            :class="{ 'divide-x divide-divider': showYBorder }"
+            @click="onRowClicked(rowData)"
+          >
+            <td v-if="checkbox" class="px-5">
+              <input
+                type="checkbox"
+                :checked="isRowSelected(rowData)"
+                @click.stop="toggleRow(rowData)"
+              />
             </td>
-          </slot>
-        </tr>
-      </tbody>
-    </table>
+            <slot name="body" :row="rowData">
+              <td
+                v-for="cellHeading in headings"
+                :key="cellHeading.key"
+                class="px-4 py-2"
+                @click="!cellHeading.preventClick && onRowClicked(rowData)"
+              >
+                <!-- Dynamic column slot -->
+                <slot :name="cellHeading.key" :item="rowData">
+                  <!-- Generic implementation of the column -->
+                  <div class="flex flex-col truncate">
+                    <span class="truncate">
+                      {{ rowData[cellHeading.key] ?? "-" }}
+                    </span>
+                  </div>
+                </slot>
+              </td>
+            </slot>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -285,18 +286,21 @@ const sortList = (key: string, direction: Direction) => {
   })
 }
 
-watch(workingList.value, () => {
-  if (props.sort) {
-    sortList(props.sort.key, props.sort.direction)
-  }
-})
+watch(
+  workingList.value,
+  () => {
+    if (props.sort) {
+      sortList(props.sort.key, props.sort.direction)
+    }
+  },
+  { immediate: true },
+)
 
 // Searchbar functionality with optional debouncer
 const searchQuery = ref("")
-let debounceTimeout: number
-
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
 const debounce = (func: () => void, delay: number) => {
-  clearTimeout(debounceTimeout)
+  if (debounceTimeout) clearTimeout(debounceTimeout)
   debounceTimeout = setTimeout(func, delay)
 }
 
