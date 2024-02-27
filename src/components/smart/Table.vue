@@ -1,54 +1,57 @@
 <template>
-  <div v-if="pagination" class="mb-3 flex justify-end">
-    <div class="flex w-min">
-      <HoppButtonSecondary
-        outline
-        filled
-        :icon="IconLeft"
-        :disabled="page === 1"
-        @click="changePage(PageDirection.Previous)"
-      />
+  <div class="flex flex-1 flex-col">
+    <div v-if="pagination" class="mb-3 flex justify-end">
+      <div class="flex w-min">
+        <HoppButtonSecondary
+          outline
+          filled
+          :icon="IconLeft"
+          :disabled="page === 1"
+          @click="changePage(PageDirection.Previous)"
+        />
 
-      <div class="flex h-full w-10 items-center justify-center">
-        <p>{{ page }}</p>
+        <div class="flex h-full w-10 items-center justify-center">
+          <p>{{ page }}</p>
+        </div>
+
+        <HoppButtonSecondary
+          outline
+          filled
+          :icon="IconRight"
+          :disabled="page === pagination.totalPages"
+          @click="changePage(PageDirection.Next)"
+        />
+      </div>
+    </div>
+
+    <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
+      <div v-if="searchBar" class="flex w-full items-center bg-primary">
+        <icon-lucide-search class="mx-3 text-xs" />
+        <input
+          v-model="searchQuery"
+          class="h-full w-full bg-primary py-3"
+          :placeholder="searchBar.placeholder ?? 'Search...'"
+        />
+      </div>
+      <div v-if="isSpinnerEnabled" class="mx-auto my-3 h-5 w-5 text-center">
+        <HoppSmartSpinner />
       </div>
 
-      <HoppButtonSecondary
-        outline
-        filled
-        :icon="IconRight"
-        :disabled="page === pagination.totalPages"
-        @click="changePage(PageDirection.Next)"
-      />
-    </div>
-  </div>
-
-  <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
-    <div v-if="searchBar" class="flex w-full items-center bg-primary">
-      <icon-lucide-search class="mx-3 text-xs" />
-      <input
-        v-model="searchQuery"
-        class="h-full w-full bg-primary py-3"
-        :placeholder="searchBar.placeholder ?? 'Search...'"
-      />
-    </div>
-    <div v-if="isSpinnerEnabled" class="mx-auto my-3 h-5 w-5 text-center">
-      <HoppSmartSpinner />
-    </div>
-
-    <div v-else-if="list" class="flex flex-1 flex-col">
-      <table class="w-full">
+      <table v-else-if="list" class="w-full">
         <thead v-if="list.length > 0">
           <tr
             class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
           >
-            <th v-if="checkbox" class="px-5">
-              <input
-                ref="selectAllCheckbox"
-                type="checkbox"
-                :checked="areAllRowsSelected"
-                @click.stop="toggleAllRows"
-              />
+            <th v-if="checkbox" class="px-3">
+              <div class="flex h-full items-center justify-center">
+                <input
+                  ref="selectAllCheckbox"
+                  type="checkbox"
+                  :checked="areAllRowsSelected"
+                  class="h-full w-full"
+                  @click.stop="toggleAllRows"
+                />
+              </div>
             </th>
             <slot name="head">
               <th v-for="th in headings" scope="col" class="px-6 py-3">
@@ -66,12 +69,14 @@
             :class="{ 'divide-x divide-divider': showYBorder }"
             @click="onRowClicked(rowData)"
           >
-            <td v-if="checkbox" class="px-5">
-              <input
-                type="checkbox"
-                :checked="isRowSelected(rowData)"
-                @click.stop="toggleRow(rowData)"
-              />
+            <td v-if="checkbox" class="px-3">
+              <div class="flex h-full items-center justify-center">
+                <input
+                  type="checkbox"
+                  :checked="isRowSelected(rowData)"
+                  @click.stop="toggleRow(rowData)"
+                />
+              </div>
             </td>
             <slot name="body" :row="rowData">
               <td
