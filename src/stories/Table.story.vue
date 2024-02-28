@@ -5,10 +5,12 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
+        :spinner="{ enabled: true, duration: 1000 }"
         :selected-rows="selectedRows"
-        :pagination="{ totalPages: 1 }"
+        :pagination="{ totalPages: 2 }"
         :search-bar="{ debounce: 1000, placeholder: 'Search by name' }"
         :sort="{ key: 'name', direction: 'ascending' }"
+        @page-number="handlePageChange"
       />
     </Variant>
     <Variant title="Custom">
@@ -39,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { CellHeading } from "~/components/smart/Table.vue"
 import { HoppSmartTable } from "../components/smart"
 
@@ -51,7 +53,9 @@ const headings: CellHeading[] = [
   { key: "role", label: "Role" },
 ]
 
-const list: Record<string, string | number>[] = [
+const list = ref<Record<string, string | number>[]>([])
+
+const firstList = [
   {
     id: "123456",
     name: "Walter",
@@ -65,6 +69,33 @@ const list: Record<string, string | number>[] = [
     role: "Lab Assistant",
   },
 ]
+
+const secondList = [
+  {
+    id: "123457",
+    name: "Gus",
+    members: 20,
+    role: "CEO",
+  },
+  {
+    id: "123458",
+    name: "Mike",
+    members: 15,
+    role: "Security",
+  },
+]
+
+onMounted(() => {
+  list.value = firstList
+})
+
+const handlePageChange = (pageNumber: number) => {
+  if (pageNumber === 1) {
+    list.value = firstList
+  } else {
+    list.value = secondList
+  }
+}
 
 const selectedRows = ref<Record<string, string | number>[]>([])
 </script>
