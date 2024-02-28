@@ -5,7 +5,7 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
-        :spinner="{ enabled: true, duration: 1000 }"
+        :spinner="{ enabled: true }"
         :selected-rows="selectedRows"
         :pagination="{ totalPages: 2 }"
         :search-bar="{ debounce: 1000, placeholder: 'Search by name' }"

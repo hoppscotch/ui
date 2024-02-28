@@ -206,12 +206,13 @@ const showSpinner = (duration: number = 500) => {
 }
 
 watch(
-  () => props.spinner,
+  () => props.list,
   () => {
     if (props.spinner?.enabled === true) {
       showSpinner(props.spinner.duration)
     }
   },
+  { immediate: true },
 )
 
 // Checkbox functionality
