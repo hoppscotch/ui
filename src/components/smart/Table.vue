@@ -1,35 +1,34 @@
 <template>
   <div class="flex flex-1 flex-col">
-    <div v-if="pagination" class="mb-3 flex justify-end">
-      <div class="flex w-min">
-        <HoppButtonSecondary
-          outline
-          filled
-          :icon="IconLeft"
-          :disabled="page === 1"
-          @click="changePage(PageDirection.Previous)"
-        />
+    <div v-if="pagination" class="mb-3 flex items-center justify-end">
+      <HoppButtonSecondary
+        outline
+        filled
+        :icon="IconLeft"
+        :disabled="page === 1"
+        @click="changePage(PageDirection.Previous)"
+      />
 
-        <div class="flex h-full w-10 items-center justify-center">
-          <p>{{ page }}</p>
-        </div>
-
-        <HoppButtonSecondary
-          outline
-          filled
-          :icon="IconRight"
-          :disabled="page === pagination.totalPages"
-          @click="changePage(PageDirection.Next)"
-        />
+      <div class="flex h-full w-10 items-center justify-center">
+        <p>{{ page }}</p>
       </div>
+
+      <HoppButtonSecondary
+        outline
+        filled
+        :icon="IconRight"
+        :disabled="page === pagination.totalPages"
+        @click="changePage(PageDirection.Next)"
+      />
     </div>
 
     <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
       <div v-if="searchBar" class="flex w-full items-center bg-primary">
         <icon-lucide-search class="mx-3 text-xs" />
-        <input
+        <HoppSmartInput
           v-model="searchQuery"
-          class="h-full w-full bg-primary py-3"
+          styles="w-full bg-primary py-1"
+          input-styles="h-full border-none"
           :placeholder="searchBar.placeholder ?? 'Search...'"
         />
       </div>
@@ -37,21 +36,19 @@
         <HoppSmartSpinner />
       </div>
 
-      <table v-else-if="list" class="w-full">
-        <thead v-if="list.length > 0">
+      <table v-else-if="list.length" class="w-full">
+        <thead>
           <tr
             class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
           >
             <th v-if="checkbox" class="px-3">
-              <div class="flex h-full items-center justify-center">
-                <input
-                  ref="selectAllCheckbox"
-                  type="checkbox"
-                  :checked="areAllRowsSelected"
-                  class="h-full w-full"
-                  @click.stop="toggleAllRows"
-                />
-              </div>
+              <input
+                ref="selectAllCheckbox"
+                type="checkbox"
+                :checked="areAllRowsSelected"
+                class="flex h-full w-full items-center justify-center"
+                @click.stop="toggleAllRows"
+              />
             </th>
             <slot name="head">
               <th v-for="th in headings" scope="col" class="px-6 py-3">
@@ -70,13 +67,12 @@
             @click="onRowClicked(rowData)"
           >
             <td v-if="checkbox" class="px-3">
-              <div class="flex h-full items-center justify-center">
-                <input
-                  type="checkbox"
-                  :checked="isRowSelected(rowData)"
-                  @click.stop="toggleRow(rowData)"
-                />
-              </div>
+              <input
+                type="checkbox"
+                :checked="isRowSelected(rowData)"
+                class="flex h-full w-full items-center justify-center"
+                @click.stop="toggleRow(rowData)"
+              />
             </td>
             <slot name="body" :row="rowData">
               <td
@@ -109,6 +105,8 @@ import { isEqual } from "lodash-es"
 import { computed, ref, watch } from "vue"
 import IconLeft from "~icons/lucide/arrow-left"
 import IconRight from "~icons/lucide/arrow-right"
+import { HoppButtonSecondary } from "../button"
+import { HoppSmartInput, HoppSmartSpinner } from ".."
 
 export type CellHeading = {
   key: string
@@ -183,14 +181,16 @@ enum PageDirection {
 
 const changePage = (direction: PageDirection) => {
   const isPrevious = direction === PageDirection.Previous
-  if (
-    (isPrevious && page.value > 1) ||
-    (!isPrevious && page.value < props.pagination!.totalPages)
-  ) {
-    page.value += isPrevious ? -1 : 1
-  }
 
-  emit("pageNumber", page.value)
+  const isValidPreviousAction = isPrevious && page.value > 1
+  const isValidNextAction =
+    !isPrevious && page.value < props.pagination!.totalPages
+
+  if (isValidNextAction || isValidPreviousAction) {
+    page.value += isPrevious ? -1 : 1
+
+    emit("pageNumber", page.value)
+  }
 }
 
 // The working version of the list that is used to perform operations upon
@@ -239,56 +239,55 @@ const toggleRow = (item: Item) => {
 
   const index = selectedRows.value?.findIndex((row) => isEqual(row, data)) ?? -1
 
-  if (item.selected && !isRowSelected(data)) selectedRows.value!.push(data)
-  else if (index !== -1) selectedRows.value?.splice(index, 1)
+  if (item.selected && !isRowSelected(data)) {
+    selectedRows.value!.push(data)
+  } else if (index !== -1) {
+    selectedRows.value?.splice(index, 1)
+  }
 }
 
 const selectAllCheckbox = ref<HTMLInputElement | null>(null)
 
 const toggleAllRows = () => {
   const isChecked = selectAllCheckbox.value?.checked
-  workingList.value.forEach((item) => (item.selected = isChecked))
-
-  if (isChecked) {
-    workingList.value.forEach((item) => {
-      const { selected, ...data } = item
-      if (!isRowSelected(item)) selectedRows.value!.push(data)
-    })
-  } else {
-    workingList.value.forEach((item) => {
-      const { selected, ...data } = item
-      const index =
-        selectedRows.value?.findIndex((row) => isEqual(row, data)) ?? -1
-      selectedRows.value!.splice(index, 1)
-    })
-  }
+  workingList.value.forEach((item) => {
+    item.selected = isChecked
+    const { selected, ...data } = item
+    if (isChecked) {
+      if (!isRowSelected(item)) {
+        selectedRows.value!.push(data)
+      }
+      return
+    }
+    const index =
+      selectedRows.value?.findIndex((row) => isEqual(row, data)) ?? -1
+    selectedRows.value!.splice(index, 1)
+  })
 }
 
 const areAllRowsSelected = computed(() => {
   if (workingList.value.length === 0 || selectedRows.value?.length === 0)
     return false
-
-  let count = 0
-  workingList.value.forEach((item) => {
+  return workingList.value.every((item) => {
     const { selected, ...data } = item
-    if (selectedRows.value?.findIndex((row) => isEqual(row, data)) !== -1) {
-      count += 1
-    }
+    return selectedRows.value?.some((row) => isEqual(row, data))
   })
-  return count === workingList.value.length
 })
 
 // Sort List by key and direction which can set to ascending or descending
 export type Direction = "ascending" | "descending"
 
 const sortList = (key: string, direction: Direction) => {
-  workingList.value = workingList.value?.sort((a, b) => {
+  const sortedList = [...workingList.value]
+  sortedList.sort((a, b) => {
     const valueA = a[key] as string
     const valueB = b[key] as string
     return direction === "ascending"
       ? valueA.localeCompare(valueB)
       : valueB.localeCompare(valueA)
   })
+
+  workingList.value = sortedList
 }
 
 watch(
@@ -303,8 +302,9 @@ watch(
 
 // Searchbar functionality with optional debouncer
 const searchQuery = ref("")
-let debounceTimeout: ReturnType<typeof setTimeout> | null = null
+
 const debounce = (func: () => void, delay: number) => {
+  let debounceTimeout: ReturnType<typeof setTimeout> | null = null
   if (debounceTimeout) clearTimeout(debounceTimeout)
   debounceTimeout = setTimeout(func, delay)
 }
