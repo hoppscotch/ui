@@ -10,7 +10,7 @@
       />
 
       <div class="flex h-full w-10 items-center justify-center">
-        <p>{{ page }}</p>
+        <span>{{ page }}</span>
       </div>
 
       <HoppButtonSecondary
@@ -23,16 +23,10 @@
     </div>
 
     <div class="overflow-auto rounded-md border border-dividerDark shadow-md">
-      <div v-if="searchBar" class="flex w-full items-center bg-primary">
-        <icon-lucide-search class="mx-3 text-xs" />
-        <HoppSmartInput
-          v-model="searchQuery"
-          styles="w-full bg-primary py-1"
-          input-styles="h-full border-none"
-          :placeholder="searchBar.placeholder ?? 'Search...'"
-        />
-      </div>
-      <div v-if="isSpinnerEnabled" class="mx-auto my-3 h-5 w-5 text-center">
+      <!-- An Extension Slot to extend the table functionality such as search   -->
+      <slot name="extension"></slot>
+
+      <div v-if="spinner" class="mx-auto my-3 h-5 w-5 text-center">
         <HoppSmartSpinner />
       </div>
 
@@ -106,7 +100,7 @@ import { computed, ref, watch } from "vue"
 import IconLeft from "~icons/lucide/arrow-left"
 import IconRight from "~icons/lucide/arrow-right"
 import { HoppButtonSecondary } from "../button"
-import { HoppSmartInput, HoppSmartSpinner } from ".."
+import { HoppSmartSpinner } from ".."
 
 export type CellHeading = {
   key: string
@@ -124,12 +118,6 @@ const props = withDefaults(
     list: Item[]
     /** The headings of the table */
     headings?: CellHeading[]
-    /** Whether to show the search bar */
-    searchBar?: {
-      /** Whether to debounce the search query event */
-      debounce?: number
-      placeholder?: string
-    }
     /** Whether to show the checkbox column
      * This will be overriden if custom implementation for body slot is provided
      */
@@ -149,24 +137,20 @@ const props = withDefaults(
     }
 
     /** Whether to show the spinner */
-    spinner?: {
-      enabled: boolean
-      duration?: number
-    }
+    spinner?: boolean
   }>(),
   {
     showYBorder: false,
-    search: undefined,
     checkbox: false,
     sort: undefined,
     selectedRows: undefined,
+    spinner: false,
   },
 )
 
 const emit = defineEmits<{
   (event: "onRowClicked", item: Item): void
   (event: "update:list", list: Item[]): void
-  (event: "search", query: string): void
   (event: "update:selectedRows", selectedRows: Item[]): void
   (event: "pageNumber", page: number): void
 }>()
@@ -195,25 +179,6 @@ const changePage = (direction: PageDirection) => {
 
 // The working version of the list that is used to perform operations upon
 const workingList = useVModel(props, "list", emit)
-
-// Spinner functionality
-const isSpinnerEnabled = ref(false)
-const showSpinner = (duration: number = 500) => {
-  isSpinnerEnabled.value = true
-  setTimeout(() => {
-    isSpinnerEnabled.value = false
-  }, duration)
-}
-
-watch(
-  () => props.list,
-  () => {
-    if (props.spinner?.enabled === true) {
-      showSpinner(props.spinner.duration)
-    }
-  },
-  { immediate: true },
-)
 
 // Checkbox functionality
 const selectedRows = useVModel(props, "selectedRows", emit)
@@ -300,23 +265,4 @@ watch(
   },
   { immediate: true },
 )
-
-// Searchbar functionality with optional debouncer
-const searchQuery = ref("")
-
-const debounce = (func: () => void, delay: number) => {
-  let debounceTimeout: ReturnType<typeof setTimeout> | null = null
-  if (debounceTimeout) clearTimeout(debounceTimeout)
-  debounceTimeout = setTimeout(func, delay)
-}
-
-watch(searchQuery, () => {
-  if (props.searchBar?.debounce) {
-    debounce(() => {
-      emit("search", searchQuery.value)
-    }, props.searchBar.debounce)
-  } else {
-    emit("search", searchQuery.value)
-  }
-})
 </script>

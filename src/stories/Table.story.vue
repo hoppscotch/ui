@@ -5,10 +5,8 @@
         :headings="headings"
         :list="list"
         :checkbox="true"
-        :spinner="{ enabled: true }"
         :selected-rows="selectedRows"
         :pagination="{ totalPages: 2 }"
-        :search-bar="{ debounce: 1000, placeholder: 'Search by name' }"
         :sort="{ key: 'name', direction: 'ascending' }"
         @page-number="handlePageChange"
       />
