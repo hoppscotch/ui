@@ -5,7 +5,6 @@
         :headings="headings"
         :loading="loading"
         :list="finalList"
-        :checkbox="true"
         :selected-rows="selectedRows"
         :pagination="{ totalPages: 2 }"
         @page-number="handlePageChange"
@@ -59,7 +58,6 @@
         :headings="headings"
         :loading="loading"
         :list="extensionList"
-        :checkbox="true"
         :selected-rows="selectedRows"
         :sort="{ key: 'name', direction: sortDirection }"
         @page-number="handlePageChange"
@@ -90,10 +88,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref } from "vue"
+
 import { CellHeading, Direction } from "~/components/smart/Table.vue"
 import IconArrowUpDown from "~icons/lucide/arrow-up-down"
 import { HoppButtonPrimary, HoppSmartInput } from ".."
-import { HoppSmartTable, HoppSmartSpinner } from "../components/smart"
+import { HoppSmartSpinner, HoppSmartTable } from "../components/smart"
 
 type List = {
   id: string
@@ -148,10 +147,10 @@ const secondaryList: List[] = [
 onMounted(async () => {
   loading.value = true
 
+  // Simulate network call
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
   finalList.value = primaryList
-
   loading.value = false
 })
 

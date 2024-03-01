@@ -31,7 +31,7 @@
           <tr
             class="border-b border-dividerDark bg-primaryLight text-left text-sm text-secondary"
           >
-            <th v-if="checkbox" class="w-24">
+            <th v-if="selectedRows" class="w-24">
               <input
                 ref="selectAllCheckbox"
                 type="checkbox"
@@ -81,7 +81,7 @@
               :class="{ 'divide-x divide-divider': showYBorder }"
               @click="onRowClicked(rowData)"
             >
-              <td v-if="checkbox">
+              <td v-if="selectedRows">
                 <input
                   type="checkbox"
                   :checked="isRowSelected(rowData)"
@@ -142,10 +142,6 @@ const props = withDefaults(
     list: Item[]
     /** The headings of the table */
     headings?: CellHeading[]
-    /** Whether to show the checkbox column
-     * This will be overriden if custom implementation for body slot is provided
-     */
-    checkbox?: boolean
 
     selectedRows?: Item[]
     /** Whether to enable sorting */
@@ -165,7 +161,6 @@ const props = withDefaults(
   }>(),
   {
     showYBorder: false,
-    checkbox: false,
     sort: undefined,
     selectedRows: undefined,
     loading: false,
@@ -208,7 +203,7 @@ const workingList = useVModel(props, "list", emit)
 const selectedRows = useVModel(props, "selectedRows", emit)
 
 watch(workingList.value, (updatedList) => {
-  if (props.checkbox) {
+  if (props.selectedRows) {
     updatedList = updatedList.map((item) => ({
       ...item,
       selected: false,
@@ -288,6 +283,6 @@ watch(
 )
 
 const columnSpan = computed(
-  () => (props.headings?.length ?? 0) + (props.checkbox ? 1 : 0),
+  () => (props.headings?.length ?? 0) + (props.selectedRows ? 1 : 0),
 )
 </script>
