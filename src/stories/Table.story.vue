@@ -3,16 +3,18 @@
     <Variant title="General">
       <HoppSmartTable
         :headings="headings"
-        :list="list"
+        :list="finalList"
         :checkbox="true"
         :selected-rows="selectedRows"
         :pagination="{ totalPages: 2 }"
-        :sort="{ key: 'name', direction: 'ascending' }"
         @page-number="handlePageChange"
-      />
+      >
+      </HoppSmartTable>
     </Variant>
+
+    <!-- Custom implementation of the Table -->
     <Variant title="Custom">
-      <HoppSmartTable :list="list">
+      <HoppSmartTable :list="finalList">
         <template #head>
           <th
             v-for="heading in headings"
@@ -35,13 +37,54 @@
         </template>
       </HoppSmartTable>
     </Variant>
+
+    <!-- Extending the Table functionality -->
+    <Variant title="Extension">
+      <HoppSmartTable
+        :headings="headings"
+        :list="extensionList"
+        :checkbox="true"
+        :selected-rows="selectedRows"
+        :sort="{ key: 'name', direction: sortDirection }"
+        @page-number="handlePageChange"
+      >
+        <template #extension>
+          <div class="flex">
+            <div class="flex w-full items-center bg-primary">
+              <icon-lucide-search class="mx-3 text-xs" />
+              <HoppSmartInput
+                v-model="searchQuery"
+                styles="w-full bg-primary py-1"
+                input-styles="h-full border-none"
+                placeholder="Search.."
+              />
+            </div>
+            <HoppButtonPrimary
+              :icon="IconArrowUpDown"
+              label="Sort"
+              class="rounded-none"
+              @click="toggleSortDirection"
+            />
+          </div>
+        </template>
+      </HoppSmartTable>
+    </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import { CellHeading } from "~/components/smart/Table.vue"
+import { computed, onMounted, ref, Ref } from "vue"
+import { CellHeading, Direction } from "~/components/smart/Table.vue"
+import IconArrowUpDown from "~icons/lucide/arrow-up-down"
+import { HoppButtonPrimary, HoppSmartInput } from ".."
 import { HoppSmartTable } from "../components/smart"
+
+type List = {
+  id: string
+  name: string
+  members: number
+  role: string
+}
 
 // Table Headings
 const headings: CellHeading[] = [
@@ -51,9 +94,10 @@ const headings: CellHeading[] = [
   { key: "role", label: "Role" },
 ]
 
-const list = ref<Record<string, string | number>[]>([])
+const finalList = ref<List[]>([])
+const selectedRows = ref<List[]>([])
 
-const firstList = [
+const primaryList: List[] = [
   {
     id: "123456",
     name: "Walter",
@@ -68,7 +112,7 @@ const firstList = [
   },
 ]
 
-const secondList = [
+const secondaryList: List[] = [
   {
     id: "123457",
     name: "Gus",
@@ -84,16 +128,34 @@ const secondList = [
 ]
 
 onMounted(() => {
-  list.value = firstList
+  finalList.value = primaryList
 })
 
 const handlePageChange = (pageNumber: number) => {
   if (pageNumber === 1) {
-    list.value = firstList
+    finalList.value = primaryList
   } else {
-    list.value = secondList
+    finalList.value = secondaryList
   }
 }
 
-const selectedRows = ref<Record<string, string | number>[]>([])
+const sortDirection: Ref<Direction> = ref("ascending")
+
+const toggleSortDirection = () => {
+  sortDirection.value =
+    sortDirection.value === "ascending" ? "descending" : "ascending"
+}
+
+const searchQuery = ref("")
+
+const extensionList = computed(() => {
+  return primaryList.filter((item) => {
+    return Object.values(item).some((value) =>
+      value
+        .toString()
+        .toLowerCase()
+        .includes((searchQuery.value as string).toLowerCase()),
+    )
+  })
+})
 </script>

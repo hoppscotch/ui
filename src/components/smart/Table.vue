@@ -26,7 +26,7 @@
       <!-- An Extension Slot to extend the table functionality such as search   -->
       <slot name="extension"></slot>
 
-      <div v-if="spinner" class="mx-auto my-3 h-5 w-5 text-center">
+      <div v-if="loading" class="mx-auto my-3 h-5 w-5 text-center">
         <HoppSmartSpinner />
       </div>
 
@@ -99,8 +99,8 @@ import { isEqual } from "lodash-es"
 import { computed, ref, watch } from "vue"
 import IconLeft from "~icons/lucide/arrow-left"
 import IconRight from "~icons/lucide/arrow-right"
-import { HoppButtonSecondary } from "../button"
 import { HoppSmartSpinner } from ".."
+import { HoppButtonSecondary } from "../button"
 
 export type CellHeading = {
   key: string
@@ -136,8 +136,8 @@ const props = withDefaults(
       totalPages: number
     }
 
-    /** Whether to show the spinner */
-    spinner?: boolean
+    /** Whether to show a loading spinner */
+    loading?: boolean
   }>(),
   {
     showYBorder: false,
@@ -244,20 +244,17 @@ const areAllRowsSelected = computed(() => {
 export type Direction = "ascending" | "descending"
 
 const sortList = (key: string, direction: Direction) => {
-  const sortedList = [...workingList.value]
-  sortedList.sort((a, b) => {
+  workingList.value.sort((a, b) => {
     const valueA = a[key] as string
     const valueB = b[key] as string
     return direction === "ascending"
       ? valueA.localeCompare(valueB)
       : valueB.localeCompare(valueA)
   })
-
-  workingList.value = sortedList
 }
 
 watch(
-  workingList.value,
+  () => props.sort?.direction,
   () => {
     if (props.sort) {
       sortList(props.sort.key, props.sort.direction)
