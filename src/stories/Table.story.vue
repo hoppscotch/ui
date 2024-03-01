@@ -3,6 +3,7 @@
     <Variant title="General">
       <HoppSmartTable
         :headings="headings"
+        :loading="loading"
         :list="finalList"
         :checkbox="true"
         :selected-rows="selectedRows"
@@ -14,7 +15,7 @@
 
     <!-- Custom implementation of the Table -->
     <Variant title="Custom">
-      <HoppSmartTable :list="finalList">
+      <HoppSmartTable :loading="loading" :list="finalList">
         <template #head>
           <th
             v-for="heading in headings"
@@ -26,6 +27,14 @@
           </th>
         </template>
 
+        <template #loading-state>
+          <td :colspan="headings.length">
+            <div class="mx-auto my-3 h-5 w-5 text-center">
+              <HoppSmartSpinner />
+            </div>
+          </td>
+        </template>
+
         <template #body="{ row }">
           <td
             v-for="cellHeading in headings"
@@ -35,6 +44,12 @@
             {{ row[cellHeading.key] ?? "-" }}
           </td>
         </template>
+
+        <template #empty-state>
+          <td :colspan="headings.length" class="py-3 text-center">
+            <p>No data available</p>
+          </td>
+        </template>
       </HoppSmartTable>
     </Variant>
 
@@ -42,6 +57,7 @@
     <Variant title="Extension">
       <HoppSmartTable
         :headings="headings"
+        :loading="loading"
         :list="extensionList"
         :checkbox="true"
         :selected-rows="selectedRows"
@@ -77,7 +93,7 @@ import { computed, onMounted, ref, Ref } from "vue"
 import { CellHeading, Direction } from "~/components/smart/Table.vue"
 import IconArrowUpDown from "~icons/lucide/arrow-up-down"
 import { HoppButtonPrimary, HoppSmartInput } from ".."
-import { HoppSmartTable } from "../components/smart"
+import { HoppSmartTable, HoppSmartSpinner } from "../components/smart"
 
 type List = {
   id: string
@@ -93,6 +109,8 @@ const headings: CellHeading[] = [
   { key: "members", label: "Members" },
   { key: "role", label: "Role" },
 ]
+
+const loading = ref(false)
 
 const finalList = ref<List[]>([])
 const selectedRows = ref<List[]>([])
@@ -127,8 +145,14 @@ const secondaryList: List[] = [
   },
 ]
 
-onMounted(() => {
+onMounted(async () => {
+  loading.value = true
+
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
   finalList.value = primaryList
+
+  loading.value = false
 })
 
 const handlePageChange = (pageNumber: number) => {
