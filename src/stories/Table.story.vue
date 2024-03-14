@@ -4,17 +4,14 @@
       <HoppSmartTable
         :headings="headings"
         :loading="loading"
-        :list="finalList"
+        :list="list"
         :selected-rows="selectedRows"
-        :pagination="{ totalPages: 2 }"
-        @page-number="handlePageChange"
-      >
-      </HoppSmartTable>
+      />
     </Variant>
 
     <!-- Custom implementation of the Table -->
     <Variant title="Custom">
-      <HoppSmartTable :loading="loading" :list="finalList">
+      <HoppSmartTable :loading="loading" :list="list">
         <template #head>
           <th
             v-for="heading in headings"
@@ -60,7 +57,6 @@
         :list="extensionList"
         :selected-rows="selectedRows"
         :sort="{ key: 'name', direction: sortDirection }"
-        @page-number="handlePageChange"
       >
         <template #extension>
           <div class="flex">
@@ -88,7 +84,6 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, Ref } from "vue"
-
 import { CellHeading, Direction } from "~/components/smart/Table.vue"
 import IconArrowUpDown from "~icons/lucide/arrow-up-down"
 import { HoppButtonPrimary, HoppSmartInput } from ".."
@@ -111,10 +106,9 @@ const headings: CellHeading[] = [
 
 const loading = ref(false)
 
-const finalList = ref<List[]>([])
 const selectedRows = ref<List[]>([])
 
-const primaryList: List[] = [
+const list: List[] = [
   {
     id: "123456",
     name: "Walter",
@@ -129,38 +123,14 @@ const primaryList: List[] = [
   },
 ]
 
-const secondaryList: List[] = [
-  {
-    id: "123457",
-    name: "Gus",
-    members: 20,
-    role: "CEO",
-  },
-  {
-    id: "123458",
-    name: "Mike",
-    members: 15,
-    role: "Security",
-  },
-]
-
 onMounted(async () => {
   loading.value = true
 
   // Simulate network call
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  finalList.value = primaryList
   loading.value = false
 })
-
-const handlePageChange = (pageNumber: number) => {
-  if (pageNumber === 1) {
-    finalList.value = primaryList
-  } else {
-    finalList.value = secondaryList
-  }
-}
 
 const sortDirection: Ref<Direction> = ref("ascending")
 
@@ -172,7 +142,7 @@ const toggleSortDirection = () => {
 const searchQuery = ref("")
 
 const extensionList = computed(() => {
-  return primaryList.filter((item) => {
+  return list.filter((item) => {
     return Object.values(item).some((value) =>
       value
         .toString()
