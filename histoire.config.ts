@@ -15,4 +15,8 @@ export default defineConfig({
   setupFile: "histoire.setup.ts",
   plugins: [HstVue()],
   viteIgnorePlugins: ["vite:dts"],
+  viteNodeInlineDeps: [
+    /vue-promise-modals/,
+    /@boringer-avatars\/vue3/
+  ]
 })
