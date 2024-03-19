@@ -1,6 +1,11 @@
 <template>
-  <Story title="Modal">
-    <HoppSmartModal :show="show" :title="'Modal Title'" @hide-modal="show = false" @resolve="resolveConfirmModal" />
+  <Story title="Modal (Deprecated)">
+    <HoppSmartModal
+      :show="show"
+      :title="'Modal Title'"
+      @hide-modal="show = false"
+      @resolve="resolveConfirmModal"
+    />
   </Story>
 </template>
 
