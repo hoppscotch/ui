@@ -1,8 +1,8 @@
 import { toast as soner } from "vue-sonner"
 
 export type ToastOptions = {
-  type: "success" | "error" | "warning" | "info"
-  duration: number
+  type?: "success" | "error" | "warning" | "info"
+  duration?: number
 }
 
 export const toast = (message: string, option?: ToastOptions) => {
@@ -10,6 +10,10 @@ export const toast = (message: string, option?: ToastOptions) => {
     ...option,
   })
 }
+
+/*
+ * Legacy support for toast.success, toast.error, and toast.warning
+ */
 
 toast.success = (message: string, option?: ToastOptions) => {
   soner.success(message, {
