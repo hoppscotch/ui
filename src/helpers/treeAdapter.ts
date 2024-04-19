@@ -28,7 +28,8 @@ export interface SmartTreeAdapter<T> {
   /**
    *
    * @param nodeID - id of the node to get children for
+   * @param nodeType - Type of the node (`collection` | `request`)
    * @returns - Ref that contains the children of the node. It is reactive and will be updated when the children are changed.
    */
-  getChildren: (nodeID: string | null) => Ref<ChildrenResult<T>>
+  getChildren: (nodeID: string | null, nodeType?: string) => Ref<ChildrenResult<T>>
 }
