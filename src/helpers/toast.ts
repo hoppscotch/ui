@@ -1,12 +1,12 @@
-import { toast as soner } from "vue-sonner"
+import { toast as sonner, ToasterProps } from "vue-sonner"
 
 export type ToastOptions = {
   type?: "success" | "error" | "warning" | "info"
   duration?: number
-}
+} & ToasterProps["toastOptions"]
 
 export const toast = (message: string, option?: ToastOptions) => {
-  soner(message, {
+  sonner(message, {
     ...option,
   })
 }
@@ -16,19 +16,21 @@ export const toast = (message: string, option?: ToastOptions) => {
  */
 
 toast.success = (message: string, option?: ToastOptions) => {
-  soner.success(message, {
+  sonner.success(message, {
     ...option,
   })
 }
 
 toast.error = (message: string, option?: ToastOptions) => {
-  soner.error(message, {
+  sonner.error(message, {
     ...option,
   })
 }
 
 toast.warning = (message: string, option?: ToastOptions) => {
-  soner.warning(message, {
+  sonner.warning(message, {
     ...option,
   })
 }
+
+toast.show = toast
