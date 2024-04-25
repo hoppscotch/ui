@@ -129,7 +129,6 @@ onBeforeUnmount(() => {
 })
 
 const close = () => {
-  console.log("close")
   emit("close")
 }
 

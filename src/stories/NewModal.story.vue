@@ -4,11 +4,26 @@
       <button @click="openTestModal">Open Simple Dialog</button>
     </Variant>
     <Variant title="Dialog with Input">
-      <p>
-        <span>
-          Resolved Value: <strong>{{ text }}</strong>
-        </span>
-      </p>
+      <div>
+        <p>
+          <span>Status: </span>
+          <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
+
+          <span
+            v-else-if="modalWithInputReturn.type === 'resolve'"
+            :style="{ color: 'green' }"
+          >
+            Resolved with value '{{ modalWithInputReturn.value }}'
+          </span>
+
+          <span
+            v-else-if="modalWithInputReturn.type === 'reject'"
+            :style="{ color: 'red' }"
+          >
+            Cancelled
+          </span>
+        </p>
+      </div>
 
       <button @click="openInputDialog">Open Dialog with Input</button>
     </Variant>
@@ -22,21 +37,24 @@ import { InputDialog, GreetingsModal } from "../components/modal/examples"
 
 const { openModal } = useModals()
 
-function openTestModal() {
-  openModal(GreetingsModal, {
+async function openTestModal() {
+  await openModal(GreetingsModal, {
     openCount: 0,
   })
 }
 
-const text = ref("")
+const modalWithInputReturn = ref<
+  undefined | { type: "resolve"; value: string } | { type: "reject" }
+>()
 
 async function openInputDialog() {
   try {
     const result = await openModal(InputDialog, {})
-    text.value = result.text
+    modalWithInputReturn.value = { type: "resolve", value: result.text }
   } catch (e) {
     // The error value will be the same value as emitted through the `modal-reject` event
     console.log("Modal Rejected:", e)
+    modalWithInputReturn.value = { type: "reject" }
   }
 }
 </script>
