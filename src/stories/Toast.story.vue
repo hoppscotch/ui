@@ -3,11 +3,13 @@
     <Toaster richColors />
     <Variant title="Legacy Toast">
       <button @click="launchLegacyToast">Simple Legacy toast</button>
+      <button @click="openLegacyToastWithAction">Open Toast with Action</button>
     </Variant>
     <Variant title="New Toast">
-      <button @click="openBasicToast()">Basic Toast</button>
+      <button @click="openBasicToast">Basic Toast</button>
       <button @click="openSuccessToast">Success Toast</button>
       <button @click="openErrorToast">Error Toast</button>
+      <button @click="openToastWithAction">Open Toast with Action</button>
     </Variant>
   </Story>
 </template>
@@ -26,8 +28,32 @@ const openErrorToast = () => {
   toast("Error toast", { type: "error" })
 }
 
+const openToastWithAction = () => {
+  toast.show(`Are you sure?`, {
+    duration: 0,
+    action: {
+      label: "Confirm",
+      onClick: (e) => {
+        console.log(e)
+      },
+    },
+  })
+}
+
 const launchLegacyToast = () => {
   toast.success("Simple Legacy toast")
+}
+
+const openLegacyToastWithAction = () => {
+  toast.show(`Are you sure?`, {
+    duration: 0,
+    action: {
+      label: `Yes`,
+      onClick: (e) => {
+        console.log(e)
+      },
+    },
+  })
 }
 </script>
 
