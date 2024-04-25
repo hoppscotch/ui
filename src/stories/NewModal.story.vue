@@ -18,12 +18,12 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import { useModals } from "vue-promise-modals"
-import { HoppModal, InputDialog } from "../components/modal"
+import { InputDialog, GreetingsModal } from "../components/modal/examples"
 
 const { openModal } = useModals()
 
 function openTestModal() {
-  openModal(HoppModal, {
+  openModal(GreetingsModal, {
     openCount: 0,
   })
 }
@@ -32,7 +32,7 @@ const text = ref("")
 
 async function openInputDialog() {
   try {
-    const result = await openModal(InputDialog)
+    const result = await openModal(InputDialog, {})
     text.value = result.text
   } catch (e) {
     // The error value will be the same value as emitted through the `modal-reject` event
