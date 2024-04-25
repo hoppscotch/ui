@@ -19,7 +19,7 @@
     </template>
     <template #footer>
       <HoppButtonPrimary
-        label="Submit"
+        label="Submit from Parent"
         @click="emit('modal-resolve', { text })"
       />
       <HoppButtonSecondary label="Cancel" @click="emit('modal-reject')" />
