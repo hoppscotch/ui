@@ -1,10 +1,10 @@
 <template>
   <Story title="New Modal (HoppModal)">
     <Variant title="Simple Dialog with Close Button">
-      <button @click="openTestModal">Open Simple Dialog</button>
+      <HoppButtonPrimary @click="openTestModal" label="Open Simple Dialog" />
     </Variant>
     <Variant title="Dialog with Input">
-      <div>
+      <div class="mb-3">
         <p>
           <span>Status: </span>
           <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
@@ -25,7 +25,37 @@
         </p>
       </div>
 
-      <button @click="openInputDialog">Open Dialog with Input</button>
+      <HoppButtonPrimary
+        @click="openInputDialog"
+        label="Open Dialog with Input"
+      />
+    </Variant>
+    <Variant title="Nested Dialog with Input">
+      <div class="mb-3">
+        <p>
+          <span>Status: </span>
+          <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
+
+          <span
+            v-else-if="modalWithInputReturn.type === 'resolve'"
+            :style="{ color: 'green' }"
+          >
+            Resolved with value '{{ modalWithInputReturn.value }}'
+          </span>
+
+          <span
+            v-else-if="modalWithInputReturn.type === 'reject'"
+            :style="{ color: 'red' }"
+          >
+            Cancelled
+          </span>
+        </p>
+      </div>
+
+      <HoppButtonPrimary
+        @click="openNestedInputDialog"
+        label="Open Dialog with Input"
+      />
     </Variant>
   </Story>
 </template>
@@ -33,14 +63,17 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import { useModals } from "vue-promise-modals"
-import { InputDialog, GreetingsModal } from "../components/modal/examples"
+import {
+  InputDialog,
+  GreetingsModal,
+  NestedDialog,
+} from "../components/modal/examples"
+import { HoppButtonPrimary } from ".."
 
 const { openModal } = useModals()
 
 async function openTestModal() {
-  await openModal(GreetingsModal, {
-    openCount: 0,
-  })
+  await openModal(GreetingsModal)
 }
 
 const modalWithInputReturn = ref<
@@ -49,7 +82,22 @@ const modalWithInputReturn = ref<
 
 async function openInputDialog() {
   try {
-    const result = await openModal(InputDialog, {})
+    const result = await openModal(InputDialog, {
+      title: "Dialog with Input field",
+    })
+    modalWithInputReturn.value = { type: "resolve", value: result.text }
+  } catch (e) {
+    // The error value will be the same value as emitted through the `modal-reject` event
+    console.log("Modal Rejected:", e)
+    modalWithInputReturn.value = { type: "reject" }
+  }
+}
+
+async function openNestedInputDialog() {
+  try {
+    const result = await openModal(NestedDialog, {
+      title: "Nested Input Dialog",
+    })
     modalWithInputReturn.value = { type: "resolve", value: result.text }
   } catch (e) {
     // The error value will be the same value as emitted through the `modal-reject` event
