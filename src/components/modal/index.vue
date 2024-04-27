@@ -80,14 +80,14 @@ const { onModalOpen, onModalClose } =
 
 withDefaults(
   defineProps<{
-    dialog: boolean
-    title: string
-    dimissible: boolean
-    placement: string
-    fullWidth: boolean
-    fullWidthBody: boolean
-    styles: string
-    closeText: string | null
+    dialog?: boolean
+    title?: string
+    dimissible?: boolean
+    placement?: string
+    fullWidth?: boolean
+    fullWidthBody?: boolean
+    styles?: string
+    closeText?: string | null
   }>(),
   {
     dialog: false,
