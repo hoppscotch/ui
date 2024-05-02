@@ -14,6 +14,7 @@ export type LegacyToastAction = {
 export type ToastOptions = {
   type?: "success" | "error" | "warning" | "info"
   duration?: number
+  closeOnSwipe?: boolean
   action?:
     | LegacyToastAction
     | LegacyToastAction[]
@@ -63,7 +64,9 @@ const generateLegacyToastWithActions = (
                   "button",
                   {
                     onClick: (e: MouseEvent) => {
-                      action?.onClick(e, {})
+                      action?.onClick(e, {
+                        goAway: (delay?: number) => {},
+                      })
                     },
                   },
                   action.text,
@@ -76,25 +79,7 @@ const generateLegacyToastWithActions = (
   })
 }
 
-toast.success = (message: string, option?: ToastOptions) => {
-  sonner.success(message, {
-    ...option,
-  })
-}
-
-toast.error = (message: string, option?: ToastOptions) => {
-  sonner.error(message, {
-    ...option,
-  })
-}
-
-toast.warning = (message: string, option?: ToastOptions) => {
-  sonner.warning(message, {
-    ...option,
-  })
-}
-
-toast.show = (message: string, option?: ToastOptions) => {
+const legacyToast = (message: string, option?: ToastOptions) => {
   // if action is an array or object with property text then it is a legacy toast
   const isLegacyToast =
     Array.isArray(option?.action) ||
@@ -109,8 +94,16 @@ toast.show = (message: string, option?: ToastOptions) => {
       )
     : message
 
+  const duration = option?.duration === 0 ? Infinity : option?.duration
+
   sonner(raw, {
     ...option,
-    duration: 99999999999999999,
+    duration,
+    action: isLegacyToast ? undefined : option?.action,
   })
 }
+
+toast.success = legacyToast
+toast.error = legacyToast
+toast.warning = legacyToast
+toast.show = legacyToast
