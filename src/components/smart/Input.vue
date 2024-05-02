@@ -11,6 +11,8 @@
       autocomplete="off"
       required
       :disabled="disabled"
+      :aria-label="label"
+      :aria-required="required"
     />
 
     <label v-if="label.length > 0" :for="inputID"> {{ label }} </label>
@@ -56,6 +58,7 @@ const props = withDefaults(
     label: string
     disabled: boolean
     autofocus: boolean
+    required?: boolean
   }>(),
   {
     id: "",
@@ -67,7 +70,7 @@ const props = withDefaults(
     label: "",
     disabled: false,
     autofocus: true,
-  }
+  },
 )
 
 const emit = defineEmits<{
@@ -84,6 +87,6 @@ onKeyStroke(
       return emit("submit")
     }
   },
-  { target: inputRef, eventName: "keydown" }
+  { target: inputRef, eventName: "keydown" },
 )
 </script>
