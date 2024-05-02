@@ -3,9 +3,9 @@
     :to="to"
     :exact="exact"
     :blank="blank"
-    class="inline-flex items-center flex-shrink-0 px-4 py-2 rounded transition hover:bg-primaryDark hover:text-secondaryDark focus:outline-none focus-visible:bg-primaryDark focus-visible:text-secondaryDark"
+    class="inline-flex flex-shrink-0 items-center rounded px-4 py-2 transition hover:bg-primaryDark hover:text-secondaryDark focus:outline-none focus-visible:bg-primaryDark focus-visible:text-secondaryDark"
     :class="[
-      { 'opacity-75 cursor-not-allowed': disabled },
+      { 'cursor-not-allowed opacity-75': disabled },
       { 'pointer-events-none': loading },
       { 'flex-1': label },
       { 'flex-row-reverse justify-end': reverse },
@@ -26,20 +26,22 @@
       <component
         :is="icon"
         v-if="icon"
-        class="opacity-75 svg-icons"
+        class="svg-icons opacity-75"
         :class="[
           label ? (reverse ? 'ml-4' : 'mr-4') : '',
           { 'text-accent': active },
         ]"
+        aria-hidden="true"
       />
     </span>
     <HoppSmartSpinner v-else class="mr-4 text-secondaryDark" />
     <div
-      class="inline-flex items-start flex-1 truncate"
+      class="inline-flex flex-1 items-start truncate"
       :class="{ 'flex-col': description }"
     >
-      <div class="font-semibold truncate max-w-[16rem]">
-        {{ label }}
+      <div class="max-w-[16rem] truncate font-semibold">
+        <span v-if="label">{{ label }}</span>
+        <!-- Added span to ensure label text is announced separately -->
       </div>
       <p v-if="description" class="my-2 text-left text-secondaryLight">
         {{ description }}
@@ -48,14 +50,15 @@
     <component
       :is="infoIcon"
       v-if="infoIcon"
-      class="items-center self-center ml-6 -mr-2 svg-icons"
+      class="svg-icons -mr-2 ml-6 items-center self-center"
       :class="{ 'text-accent': activeInfoIcon }"
+      aria-hidden="true"
     />
-    <div v-if="shortcut.length" class="ml-4 inline-flex <sm:hidden font-medium">
+    <div v-if="shortcut.length" class="ml-4 inline-flex font-medium <sm:hidden">
       <kbd
         v-for="(key, index) in shortcut"
         :key="`key-${index}`"
-        class="-mr-2 shortcut-key"
+        class="shortcut-key -mr-2"
       >
         {{ key }}
       </kbd>
@@ -63,88 +66,44 @@
   </HoppSmartLink>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import HoppSmartLink from "./Link.vue"
 import HoppSmartSpinner from "./Spinner.vue"
-import { defineComponent } from "vue"
 
-export default defineComponent({
-  components: {
-    HoppSmartLink,
-    HoppSmartSpinner,
+withDefaults(
+  defineProps<{
+    to: string
+    exact: boolean
+    blank: boolean
+    label: string
+    description: string
+    icon: object | null
+    svg: object | null
+    disabled: boolean
+    loading: boolean
+    reverse: boolean
+    outline: boolean
+    shortcut: string[]
+    active: boolean
+    activeInfoIcon: boolean
+    infoIcon: object | null
+  }>(),
+  {
+    to: "",
+    exact: true,
+    blank: false,
+    label: "",
+    description: "",
+    icon: null,
+    svg: null,
+    disabled: false,
+    loading: false,
+    reverse: false,
+    outline: false,
+    shortcut: [],
+    active: false,
+    activeInfoIcon: false,
+    infoIcon: null,
   },
-  props: {
-    to: {
-      type: String,
-      default: "",
-    },
-    exact: {
-      type: Boolean,
-      default: true,
-    },
-    blank: {
-      type: Boolean,
-      default: false,
-    },
-    label: {
-      type: String,
-      default: "",
-    },
-    description: {
-      type: String,
-      default: "",
-    },
-    /**
-     * This will be a component!
-     */
-    icon: {
-      type: Object,
-      default: null,
-    },
-    /**
-     * This will be a component!
-     */
-    svg: {
-      type: Object,
-      default: null,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    reverse: {
-      type: Boolean,
-      default: false,
-    },
-    outline: {
-      type: Boolean,
-      default: false,
-    },
-    shortcut: {
-      type: Array,
-      default: () => [],
-    },
-    active: {
-      type: Boolean,
-      default: false,
-    },
-
-    activeInfoIcon: {
-      type: Boolean,
-      default: false,
-    },
-
-    /**
-     * This will be a component!
-     */
-    infoIcon: {
-      type: Object,
-      default: null,
-    },
-  },
-})
+)
 </script>
