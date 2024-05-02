@@ -4,6 +4,9 @@
     <Variant title="Legacy Toast">
       <button @click="launchLegacyToast">Simple Legacy toast</button>
       <button @click="openLegacyToastWithAction">Open Toast with Action</button>
+      <button @click="openLegacyToastWithMultiActions">
+        Open Toast with Multiple Actions
+      </button>
     </Variant>
     <Variant title="New Toast">
       <button @click="openBasicToast">Basic Toast</button>
@@ -19,7 +22,15 @@ import { Toaster } from "vue-sonner"
 import { toast } from "./../helpers/toast"
 
 const openBasicToast = () => {
-  toast("Basic toast")
+  toast("Basic toast", {
+    closeButton: true,
+    cancel: {
+      label: "Cancel",
+      onClick: () => {
+        console.log("Cancel")
+      },
+    },
+  })
 }
 const openSuccessToast = () => {
   toast("Success toast", { type: "success" })
@@ -53,6 +64,26 @@ const openLegacyToastWithAction = () => {
         console.log(e)
       },
     },
+  })
+}
+
+const openLegacyToastWithMultiActions = () => {
+  toast.show(`Are you sure?`, {
+    duration: 0,
+    action: [
+      {
+        text: `Dissmiss`,
+        onClick: (_, toastObject) => {
+          alert("Dissmissed")
+        },
+      },
+      {
+        text: `Confirm`,
+        onClick: (_, toastObject) => {
+          alert("Confirmed")
+        },
+      },
+    ],
   })
 }
 </script>

@@ -4,6 +4,7 @@ import { plugin } from "vue-promise-modals"
 import GlobalWrapper from "./src/GlobalWrapper.vue"
 
 import "./src/assets/scss/histoire.scss"
+import "./src/assets/scss/styles.scss"
 
 import "@fontsource-variable/inter"
 import "@fontsource-variable/material-symbols-rounded"

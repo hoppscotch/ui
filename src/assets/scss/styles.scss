@@ -1,3 +1,18 @@
 /*
 * Write hoppscotch-ui related custom global styles in this file.
 */
+
+// legacy toast styles
+.l-toast {
+  display: flex;
+  justify-content: space-between;
+}
+
+.l-toast-title {
+  margin-bottom: 1rem;
+}
+
+.l-toast-actions {
+  display: flex;
+  gap: 1rem;
+}
