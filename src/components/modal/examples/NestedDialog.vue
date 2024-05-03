@@ -7,14 +7,12 @@
           @click="openNestedInputDialog"
         />
 
-        <p>
-          <HoppSmartInput
-            type="text"
-            placeholder="Enter some text..."
-            v-model="text"
-            @submit="emit('modal-resolve', { text })"
-          />
-        </p>
+        <HoppSmartInput
+          type="text"
+          placeholder="Enter some text..."
+          v-model="text"
+          @submit="emit('modal-resolve', { text })"
+        />
       </div>
     </template>
     <template #footer>

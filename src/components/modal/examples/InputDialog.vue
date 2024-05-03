@@ -4,23 +4,23 @@
     @close="emit('modal-reject')"
   >
     <template #body>
-      <div>
-        <p>
-          <HoppSmartInput
-            type="text"
-            placeholder="Enter some text..."
-            v-model="text"
-            @submit="emit('modal-resolve', { text })"
-          />
-        </p>
-      </div>
+      <HoppSmartInput
+        type="text"
+        placeholder="Enter some text..."
+        v-model="text"
+        @submit="emit('modal-resolve', { text })"
+      />
     </template>
     <template #footer>
       <HoppButtonPrimary
         label="Submit"
         @click="emit('modal-resolve', { text })"
       />
-      <HoppButtonSecondary label="Cancel" @click="emit('modal-reject')" />
+      <HoppButtonSecondary
+        filled
+        label="Cancel"
+        @click="emit('modal-reject')"
+      />
     </template>
   </HoppModal>
 </template>

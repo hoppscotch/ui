@@ -37,7 +37,7 @@
             >
               <Heading
                 :title="title"
-                :show-close-icon="dimissible"
+                :show-close-icon="dismissible"
                 :close-text="closeText"
                 @close="close"
               />
@@ -82,7 +82,7 @@ withDefaults(
   defineProps<{
     dialog?: boolean
     title?: string
-    dimissible?: boolean
+    dismissible?: boolean
     placement?: string
     fullWidth?: boolean
     fullWidthBody?: boolean
@@ -92,7 +92,7 @@ withDefaults(
   {
     dialog: false,
     title: "",
-    dimissible: true,
+    dismissible: true,
     placement: "top",
     fullWidth: false,
     fullWidthBody: false,

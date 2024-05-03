@@ -72,9 +72,9 @@ const openLegacyToastWithMultiActions = () => {
     duration: 0,
     action: [
       {
-        text: `Dissmiss`,
+        text: `Dismiss`,
         onClick: (_, toastObject) => {
-          alert("Dissmissed")
+          alert("Dismissed")
         },
       },
       {

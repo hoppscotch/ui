@@ -44,20 +44,20 @@ const generateLegacyToastWithActions = (
         h(
           "div",
           {
-            class: "l-tosat",
+            class: "l-toast",
           },
           [
             h(
               "div",
               {
-                class: "l-tosat-title",
+                class: "l-toast-title",
               },
               message,
             ),
             h(
               "div",
               {
-                class: "l-tosat-actions",
+                class: "l-toast-actions",
               },
               actions.map((action) =>
                 h(

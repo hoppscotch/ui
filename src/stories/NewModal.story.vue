@@ -5,24 +5,22 @@
     </Variant>
     <Variant title="Dialog with Input">
       <div class="mb-3">
-        <p>
-          <span>Status: </span>
-          <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
+        <span>Status: </span>
+        <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
 
-          <span
-            v-else-if="modalWithInputReturn.type === 'resolve'"
-            :style="{ color: 'green' }"
-          >
-            Resolved with value '{{ modalWithInputReturn.value }}'
-          </span>
+        <span
+          v-else-if="modalWithInputReturn.type === 'resolve'"
+          :style="{ color: 'green' }"
+        >
+          Resolved with value '{{ modalWithInputReturn.value }}'
+        </span>
 
-          <span
-            v-else-if="modalWithInputReturn.type === 'reject'"
-            :style="{ color: 'red' }"
-          >
-            Cancelled
-          </span>
-        </p>
+        <span
+          v-else-if="modalWithInputReturn.type === 'reject'"
+          :style="{ color: 'red' }"
+        >
+          Cancelled
+        </span>
       </div>
 
       <HoppButtonPrimary
@@ -32,24 +30,22 @@
     </Variant>
     <Variant title="Nested Dialog with Input">
       <div class="mb-3">
-        <p>
-          <span>Status: </span>
-          <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
+        <span>Status: </span>
+        <span v-if="modalWithInputReturn === undefined"> Not Opened </span>
 
-          <span
-            v-else-if="modalWithInputReturn.type === 'resolve'"
-            :style="{ color: 'green' }"
-          >
-            Resolved with value '{{ modalWithInputReturn.value }}'
-          </span>
+        <span
+          v-else-if="modalWithInputReturn.type === 'resolve'"
+          :style="{ color: 'green' }"
+        >
+          Resolved with value '{{ modalWithInputReturn.value }}'
+        </span>
 
-          <span
-            v-else-if="modalWithInputReturn.type === 'reject'"
-            :style="{ color: 'red' }"
-          >
-            Cancelled
-          </span>
-        </p>
+        <span
+          v-else-if="modalWithInputReturn.type === 'reject'"
+          :style="{ color: 'red' }"
+        >
+          Cancelled
+        </span>
       </div>
 
       <HoppButtonPrimary

@@ -3,9 +3,9 @@
     <button @click="showModal()">Show Modal</button>
 
     <HoppSmartModal
-      :show="show"
+      v-if="show"
       :title="'Modal Title'"
-      @hide-modal="show = false"
+      @close="show = false"
       @resolve="resolveConfirmModal($event)"
     />
   </Story>
