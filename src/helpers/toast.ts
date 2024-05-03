@@ -79,31 +79,34 @@ const generateLegacyToastWithActions = (
   })
 }
 
-const legacyToast = (message: string, option?: ToastOptions) => {
-  // if action is an array or object with property text then it is a legacy toast
-  const isLegacyToast =
-    Array.isArray(option?.action) ||
-    Object.prototype.hasOwnProperty.call(option?.action, "text")
+const legacyToast =
+  (type?: string) => (message: string, option?: ToastOptions) => {
+    // if action is an array or object with property text then it is a legacy toast
+    const isLegacyToast =
+      Array.isArray(option?.action) ||
+      Object.prototype.hasOwnProperty.call(option?.action ?? {}, "text")
 
-  const raw = isLegacyToast
-    ? markRaw(
-        generateLegacyToastWithActions(
-          message,
-          option?.action as LegacyToastAction,
-        ),
-      )
-    : message
+    const raw = isLegacyToast
+      ? markRaw(
+          generateLegacyToastWithActions(
+            message,
+            option?.action as LegacyToastAction, // type assertion is safe here because we checked if it is a legacy toast
+          ),
+        )
+      : message
 
-  const duration = option?.duration === 0 ? Infinity : option?.duration
+    const duration = option?.duration === 0 ? Infinity : option?.duration
 
-  sonner(raw, {
-    ...option,
-    duration,
-    action: isLegacyToast ? undefined : option?.action,
-  })
-}
+    sonner(raw, {
+      ...option,
+      // @ts-ignore type is not compatible with legacy toast
+      type,
+      duration,
+      action: isLegacyToast ? undefined : option?.action,
+    })
+  }
 
-toast.success = legacyToast
-toast.error = legacyToast
-toast.warning = legacyToast
-toast.show = legacyToast
+toast.success = legacyToast("success")
+toast.error = legacyToast("error")
+toast.warning = legacyToast("warning")
+toast.show = legacyToast()
