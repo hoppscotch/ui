@@ -8,10 +8,10 @@ export type SonnerToastOptions = Exclude<
 
 export type LegacyToastAction = {
   text: string
-  onClick: (event: MouseEvent, toast: unknown) => void
+  onClick: (event?: MouseEvent, toast?: unknown) => void
 }
 
-export type ToastOptions = {
+export type ToastOptions = SonnerToastOptions & {
   type?: "success" | "error" | "warning" | "info"
   duration?: number
   closeOnSwipe?: boolean
@@ -19,7 +19,7 @@ export type ToastOptions = {
     | LegacyToastAction
     | LegacyToastAction[]
     | SonnerToastOptions["action"]
-} & SonnerToastOptions
+}
 
 export const toast = (
   message: Parameters<typeof sonner>[0], // string | Component
@@ -63,6 +63,7 @@ const generateLegacyToastWithActions = (
                 h(
                   "button",
                   {
+                    class: "action ripple",
                     onClick: (e: MouseEvent) => {
                       action?.onClick(e, {
                         goAway: (delay?: number) => {},
@@ -99,8 +100,7 @@ const legacyToast =
 
     sonner(raw, {
       ...option,
-      // @ts-ignore type is not compatible with legacy toast
-      type,
+      ...(type && { type }),
       duration,
       action: isLegacyToast ? undefined : option?.action,
     })

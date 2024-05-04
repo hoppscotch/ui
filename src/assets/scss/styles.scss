@@ -5,14 +5,51 @@
 // legacy toast styles
 .l-toast {
   display: flex;
+  width: auto;
+  clear: both;
+  position: relative;
+  max-width: 100%;
+  height: auto;
+  word-break: normal;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-}
-
-.l-toast-title {
-  margin-bottom: 1rem;
+  box-sizing: inherit;
+  overflow: hidden;
 }
 
 .l-toast-actions {
   display: flex;
-  gap: 1rem;
+
+  button {
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+}
+
+.action {
+  @apply relative;
+  @apply flex flex-shrink-0;
+  @apply text-body;
+  @apply px-4;
+  @apply p-2;
+  @apply my-1;
+  @apply ml-auto;
+  @apply normal-case;
+  @apply font-semibold;
+  @apply leading-body;
+  @apply tracking-normal;
+  @apply rounded;
+  @apply last:ml-4;
+  @apply sm:ml-8;
+  @apply before:absolute;
+  @apply before:bg-current;
+  @apply before:opacity-10;
+  @apply before:inset-0;
+  @apply before:transition;
+  @apply before:content-[''];
+  @apply hover:no-underline;
+  @apply hover:before:opacity-20;
+  @apply items-center;
+  @apply justify-center;
 }
