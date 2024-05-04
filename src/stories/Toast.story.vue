@@ -56,15 +56,18 @@ const launchLegacyToast = () => {
 }
 
 const openLegacyToastWithAction = () => {
-  toast.show(`Are you sure?`, {
-    duration: 0,
-    action: {
-      label: `Yes`,
-      onClick: (e) => {
-        console.log(e)
+  toast.show(
+    `Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe perspiciatis, explicabo tempore sint ex, ducimus perferendis numquam dicta doloremque quaerat neque hic illo eius iste exercitationem praesentium debitis atque quae?`,
+    {
+      duration: 0,
+      action: {
+        text: `Yes`,
+        onClick: (e, obj) => {
+          console.log(e)
+        },
       },
     },
-  })
+  )
 }
 
 const openLegacyToastWithMultiActions = () => {
