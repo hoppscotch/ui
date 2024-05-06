@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Toaster richColors />
     <DialogHost />
     <slot />
   </div>
@@ -7,6 +8,7 @@
 
 <script setup lang="ts">
 import { DialogHost } from "vue-promise-modals"
+import { Toaster } from "vue-sonner"
 </script>
 
 <style>
