@@ -39,13 +39,14 @@ defineProps({
   },
 })
 
-const emit = defineEmits(["closeToast"])
+const emit = defineEmits<{
+  (e: "closeToast", delay?: number): void
+}>()
 
 const handleOnClick = (event: MouseEvent, item: LegacyToastAction) => {
   item.onClick(event, {
-    goAway: () => {
-      console.log("goAway", item)
-      emit("closeToast")
+    goAway: (delay) => {
+      emit("closeToast", delay)
     },
   })
 }

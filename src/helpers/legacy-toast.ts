@@ -15,6 +15,7 @@ export type ToastOptions = {
 const generateLegacyToastWithActions = (
   message: string,
   action: LegacyToastAction | LegacyToastAction[],
+  toastId: number
 ) => {
   const actions = Array.isArray(action) ? action : [action]
 
@@ -23,10 +24,21 @@ const generateLegacyToastWithActions = (
       return h(Toast, {
         message,
         actions,
+        onCloseToast: (delay?: number) => {
+          if (delay !== undefined) {
+            setTimeout(() => {
+              sonner.dismiss(toastId)
+            }, delay)
+          } else {
+            sonner.dismiss(toastId)
+          }
+        }
       })
     },
   })
 }
+
+let toastIDTicker = 0
 
 const addLegacyToast =
   (type?: string) => (message: string, option?: ToastOptions) => {
@@ -34,12 +46,16 @@ const addLegacyToast =
     const isLegacyToast =
       Array.isArray(option?.action) ||
       Object.prototype.hasOwnProperty.call(option?.action ?? {}, "text")
+  
+    toastIDTicker++
+    const toastID = toastIDTicker
 
     const raw = isLegacyToast
       ? markRaw(
           generateLegacyToastWithActions(
             message,
             option?.action as LegacyToastAction, // type assertion is safe here because we checked if it is a legacy toast
+            toastID
           ),
         )
       : message
@@ -50,6 +66,7 @@ const addLegacyToast =
       ...option,
       duration,
       action: undefined,
+      id: toastID
     })
   }
 
