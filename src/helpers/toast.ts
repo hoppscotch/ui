@@ -21,13 +21,6 @@ export type ToastOptions = SonnerToastOptions & {
     | SonnerToastOptions["action"]
 }
 
-export const toast = (
-  message: Parameters<typeof sonner>[0], // string | Component
-  option?: ToastOptions,
-) => {
-  sonner(message, option)
-}
-
 /*
  * Legacy support for toast.success, toast.error, and toast.warning
  */
@@ -106,7 +99,11 @@ const legacyToast =
     })
   }
 
-toast.success = legacyToast("success")
-toast.error = legacyToast("error")
-toast.warning = legacyToast("warning")
-toast.show = legacyToast()
+const toast = Object.assign(sonner, {
+  success: legacyToast("success"),
+  error: legacyToast("error"),
+  warning: legacyToast("warning"),
+  show: legacyToast(),
+})
+
+export { toast }
