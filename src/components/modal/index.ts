@@ -1,2 +1,6 @@
 export { default as HoppModal } from "./index.vue"
-export { useModals, DialogHost } from "vue-promise-modals"
+export {
+  useModals,
+  DialogHost,
+  plugin as VuePromiseModalsPlugin,
+} from "vue-promise-modals"

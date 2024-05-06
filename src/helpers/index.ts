@@ -1,3 +1,3 @@
 export * from "./treeAdapter"
 export * from "./toast"
-export { default as HoppToast } from "vue-sonner"
+export { default as HoppToastPlugin } from "vue-sonner"
