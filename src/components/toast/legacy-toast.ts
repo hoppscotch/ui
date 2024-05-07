@@ -70,11 +70,11 @@ const addLegacyToast =
     })
   }
 
-const legacyToast = Object.assign(sonner, {
+const legacyToast = {
   success: addLegacyToast("success"),
   error: addLegacyToast("error"),
   warning: addLegacyToast("warning"),
   show: addLegacyToast(),
-})
+}
 
 export { legacyToast }
