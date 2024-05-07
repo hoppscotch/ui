@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import { legacyToast as toast } from "./../helpers/legacy-toast"
+import { legacyToast as toast } from "./../components/toast"
 
 const launchLegacyToast = () => {
   toast.success("Simple Legacy toast")

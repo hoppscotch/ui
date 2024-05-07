@@ -58,13 +58,12 @@
 
 <script lang="ts" setup>
 import { ref } from "vue"
-import { useModals } from "vue-promise-modals"
 import {
   InputDialog,
   GreetingsModal,
   NestedDialog,
 } from "../components/modal/examples"
-import { HoppButtonPrimary } from ".."
+import { HoppButtonPrimary, useModals } from ".."
 
 const { openModal } = useModals()
 

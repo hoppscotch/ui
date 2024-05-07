@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { toast } from "./../helpers/toast"
+import { toast } from "./../components/toast"
 
 const openBasicToast = () => {
   toast("Basic toast", {
@@ -22,10 +22,17 @@ const openBasicToast = () => {
   })
 }
 const openSuccessToast = () => {
-  toast("Success toast", { type: "success" })
+  toast.success("Success toast")
 }
 const openErrorToast = () => {
-  toast("Error toast", { type: "error" })
+  toast.error("Error toast", {
+    action: {
+      label: "Dismiss",
+      onClick(event) {
+        console.log(event)
+      },
+    },
+  })
 }
 
 const openToastWithAction = () => {

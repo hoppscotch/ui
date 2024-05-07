@@ -1,6 +1,6 @@
 import { defineComponent, h, markRaw } from "vue"
 import { toast as sonner } from "vue-sonner"
-import Toast, { LegacyToastAction } from "./../components/Toast.vue"
+import Toast, { LegacyToastAction } from "./Toast.vue"
 
 export type ToastOptions = {
   duration?: number
@@ -15,7 +15,7 @@ export type ToastOptions = {
 const generateLegacyToastWithActions = (
   message: string,
   action: LegacyToastAction | LegacyToastAction[],
-  toastId: number
+  toastId: number,
 ) => {
   const actions = Array.isArray(action) ? action : [action]
 
@@ -32,7 +32,7 @@ const generateLegacyToastWithActions = (
           } else {
             sonner.dismiss(toastId)
           }
-        }
+        },
       })
     },
   })
@@ -46,7 +46,7 @@ const addLegacyToast =
     const isLegacyToast =
       Array.isArray(option?.action) ||
       Object.prototype.hasOwnProperty.call(option?.action ?? {}, "text")
-  
+
     toastIDTicker++
     const toastID = toastIDTicker
 
@@ -55,7 +55,7 @@ const addLegacyToast =
           generateLegacyToastWithActions(
             message,
             option?.action as LegacyToastAction, // type assertion is safe here because we checked if it is a legacy toast
-            toastID
+            toastID,
           ),
         )
       : message
@@ -66,7 +66,7 @@ const addLegacyToast =
       ...option,
       duration,
       action: undefined,
-      id: toastID
+      id: toastID,
     })
   }
 
