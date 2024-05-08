@@ -33,6 +33,9 @@ import App from "./App.vue"
 // Import the library
 import { plugin as HoppUI } from "@hoppscotch/ui"
 
+// Import theme styles for default styling (optional)
+import "@hoppscotch/ui/themes.css"
+
 // Import the styles
 import "@hoppscotch/ui/style.css"
 
