@@ -32,6 +32,7 @@ const openErrorToast = () => {
         console.log(event)
       },
     },
+    duration: Infinity,
   })
 }
 

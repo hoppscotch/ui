@@ -67,6 +67,9 @@ const addLegacyToast =
       duration,
       action: undefined,
       id: toastID,
+      classes: {
+        toast: "legacy-toast",
+      },
     })
   }
 
