@@ -73,6 +73,9 @@ const addLegacyToast =
     })
   }
 
+/**
+ * @deprecated LegacyToast is deprecated and will be removed in a future version. Not recommended for use. Instead import toast from '@hoppscotch/ui' and use 'toast.show()'
+ */
 const legacyToast = {
   success: addLegacyToast("success"),
   error: addLegacyToast("error"),
