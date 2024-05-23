@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends any">
-import { computed, inject } from "vue"
+import { inject } from "vue"
 import SmartTreeBranch from "./TreeBranch.vue"
 import SmartSpinner from "./Spinner.vue"
 import { SmartTreeAdapter, TreeNode } from "~/helpers/treeAdapter"
@@ -68,5 +68,5 @@ const props = defineProps<{
 /**
  * Fetch the root nodes from the adapter by passing the node id as null
  */
-const rootNodes = computed(() => props.adapter.getChildren(null).value)
+const rootNodes = props.adapter.getChildren(null)
 </script>
