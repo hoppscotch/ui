@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { DialogHost } from "vue-promise-modals"
-import { Toaster } from "vue-sonner"
+import { Toaster } from "@hoppscotch/vue-sonner"
 </script>
 
 <style>

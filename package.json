@@ -43,7 +43,6 @@
     "path": "^0.12.7",
     "vite-plugin-eslint": "^1.8.1",
     "vue-promise-modals": "^0.1.0",
-    "vue-sonner": "^1.1.2",
     "vuedraggable-es": "^4.1.1"
   },
   "devDependencies": {

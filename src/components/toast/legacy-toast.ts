@@ -1,5 +1,5 @@
 import { defineComponent, h, markRaw } from "vue"
-import { toast as sonner } from "vue-sonner"
+import { toast as sonner } from "@hoppscotch/vue-sonner"
 import Toast, { LegacyToastAction } from "./Toast.vue"
 
 export type ToastOptions = {
