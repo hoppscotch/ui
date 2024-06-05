@@ -47,6 +47,9 @@ importers:
       vue-promise-modals:
         specifier: ^0.1.0
         version: 0.1.0(typescript@4.9.5)
+      vue-sonner:
+        specifier: ^1.1.2
+        version: 1.1.3
       vuedraggable-es:
         specifier: ^4.1.1
         version: 4.1.1(vue@3.3.8(typescript@4.9.5))
@@ -4423,6 +4426,9 @@ packages:
     resolution: {integrity: sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue-sonner@1.1.3:
+    resolution: {integrity: sha512-6I+5GNobKvE2nR5MPhO+T59d4j2LXRQoc/ZCmGtCoBWKDQr5nzSqjFaOOdPysHFI2p42wNLhQMafd0N540UW9Q==}
 
   vue-template-compiler@2.7.15:
     resolution: {integrity: sha512-yQxjxMptBL7UAog00O8sANud99C6wJF+7kgbcwqkvA38vCGF7HWE66w0ZFnS/kX5gSoJr/PQ4/oS3Ne2pW37Og==}
@@ -9329,6 +9335,8 @@ snapshots:
     dependencies:
       '@vue/devtools-api': 6.5.1
       vue: 3.3.8(typescript@4.9.5)
+
+  vue-sonner@1.1.3: {}
 
   vue-template-compiler@2.7.15:
     dependencies:
