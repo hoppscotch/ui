@@ -10,7 +10,7 @@
   </button>
   <a
     v-else-if="renderedTag === 'ANCHOR' && !blank"
-    aria-label="Internal Link: {{ to }}"
+    :aria-label="`Internal Link: ${to}`"
     :href="to"
     role="link"
     v-bind="updatedAttrs"
@@ -19,7 +19,7 @@
   </a>
   <a
     v-else-if="renderedTag === 'ANCHOR' && blank"
-    aria-label="External Link: {{ to }}"
+    :aria-label="`External Link: ${to}`"
     :href="to"
     role="link"
     target="_blank"
