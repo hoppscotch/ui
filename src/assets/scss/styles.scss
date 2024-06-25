@@ -1,3 +1,70 @@
 /*
 * Write hoppscotch-ui related custom global styles in this file.
 */
+
+.legacy-toast [data-content] {
+  width: 100%;
+}
+
+// legacy toast styles
+.l-toast {
+  display: flex;
+  width: auto;
+  clear: both;
+  position: relative;
+  max-width: 100%;
+  height: auto;
+  word-break: normal;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: inherit;
+  overflow: hidden;
+}
+
+.l-toast-actions {
+  display: flex;
+
+  button {
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+}
+
+@mixin actionButton {
+  position: relative;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  margin-left: auto;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  text-transform: none;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-decoration: inherit;
+  margin-left: 1rem;
+  @apply hover:no-underline sm:ml-8;
+
+  &:before {
+    position: absolute;
+    inset: 0;
+    background-color: currentColor;
+    opacity: 0.1;
+    transition: all 0.15s ease-in-out;
+    content: "";
+  }
+  &:hover::before {
+    opacity: 0.2;
+  }
+}
+
+.action {
+  @include actionButton;
+}
+
+[data-sonner-toaster] [data-button] {
+  @include actionButton;
+}
