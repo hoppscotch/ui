@@ -1,5 +1,5 @@
 <template>
-  <Story title="New Modal (HoppModal)">
+  <Story title="New Modal (HoppModal) [Beta]">
     <Variant title="Simple Dialog with Close Button">
       <HoppButtonPrimary @click="openTestModal" label="Open Simple Dialog" />
     </Variant>
