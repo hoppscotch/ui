@@ -14,13 +14,25 @@
       @click="updateSuggestions"
       @keydown="handleKeystroke"
       @change="emit('change', $event)"
+      role="combobox"
+      aria-autocomplete="list"
+      aria-haspopup="true"
+      aria-expanded="false"
+      aria-controls="autocomplete-suggestions"
     />
-    <ul v-if="suggestions.length > 0 && suggestionsVisible" class="suggestions">
+    <ul
+      v-if="suggestions.length > 0 && suggestionsVisible"
+      class="suggestions"
+      role="listbox"
+      id="autocomplete-suggestions"
+    >
       <li
         v-for="(suggestion, index) in suggestions"
         :key="`suggestion-${index}`"
         :class="{ active: currentSuggestionIndex === index }"
         @click.prevent="forceSuggestion(suggestion)"
+        role="option"
+        :aria-selected="currentSuggestionIndex === index"
       >
         {{ suggestion }}
       </li>
