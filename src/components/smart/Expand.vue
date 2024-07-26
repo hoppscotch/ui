@@ -7,7 +7,7 @@
     <div
       class="sticky inset-x-0 bottom-0 flex items-center justify-center flex-shrink-0 overflow-x-auto"
     >
-      <HoppButtonSecondary
+      <HoppButton
         :icon="expand ? IconChevronUp : IconChevronDown"
         :label="
           expand
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { HoppButtonSecondary } from "../button"
+import { HoppButton } from "../button"
 import IconChevronUp from "~icons/lucide/chevron-up"
 import IconChevronDown from "~icons/lucide/chevron-down"
 import { inject, ref } from "vue"
