@@ -39,7 +39,7 @@ const checkboxID = `checkbox-${checkboxIDCounter++}`
 defineProps({
   on: {
     type: Boolean,
-    default: false,
+    default: true, // Set default to true
   },
   name: {
     type: String,
