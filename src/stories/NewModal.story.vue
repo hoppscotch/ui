@@ -1,7 +1,7 @@
 <template>
   <Story title="New Modal (HoppModal) [Beta]">
     <Variant title="Simple Dialog with Close Button">
-      <HoppButtonPrimary @click="openTestModal" label="Open Simple Dialog" />
+      <HoppButton @click="openTestModal" label="Open Simple Dialog" />
     </Variant>
     <Variant title="Dialog with Input">
       <div class="mb-3">
@@ -23,7 +23,7 @@
         </span>
       </div>
 
-      <HoppButtonPrimary
+      <HoppButton
         @click="openInputDialog"
         label="Open Dialog with Input"
       />
@@ -48,7 +48,7 @@
         </span>
       </div>
 
-      <HoppButtonPrimary
+      <HoppButton
         @click="openNestedInputDialog"
         label="Open Dialog with Input"
       />
@@ -63,7 +63,7 @@ import {
   GreetingsModal,
   NestedDialog,
 } from "../components/modal/examples"
-import { HoppButtonPrimary, useModals } from ".."
+import { HoppButton, useModals } from ".."
 
 const { openModal } = useModals()
 
