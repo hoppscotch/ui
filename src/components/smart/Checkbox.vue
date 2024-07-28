@@ -1,9 +1,11 @@
 <template>
   <div
-    class="inline-flex items-center justify-center cursor-pointer group flex-nowrap transition hover:text-secondaryDark"
+    class="group inline-flex cursor-pointer flex-nowrap items-center justify-center transition hover:text-secondaryDark"
     role="checkbox"
     :aria-checked="on"
-    @click="emit('change')"
+    @click="toggleCheckbox"
+    @keydown.space.prevent="toggleCheckbox"
+    tabindex="0"
   >
     <input
       :id="checkboxID"
@@ -11,11 +13,11 @@
       :name="name"
       class="checkbox"
       :checked="on"
-      @change="emit('change')"
+      @change="toggleCheckbox"
     />
     <label
       :for="checkboxID"
-      class="pl-0 font-semibold truncate align-middle cursor-pointer"
+      class="cursor-pointer truncate pl-0 align-middle font-semibold"
     >
       <slot></slot>
     </label>
@@ -36,20 +38,25 @@ let checkboxIDCounter = 564275
 <script setup lang="ts">
 // Unique ID for checkbox
 const checkboxID = `checkbox-${checkboxIDCounter++}`
-defineProps({
-  on: {
-    type: Boolean,
-    default: false,
+
+withDefaults(
+  defineProps<{
+    on: boolean
+    name: string
+  }>(),
+  {
+    on: false,
+    name: "checkbox",
   },
-  name: {
-    type: String,
-    default: "checkbox",
-  },
-})
+)
 
 const emit = defineEmits<{
   (e: "change"): void
 }>()
+
+const toggleCheckbox = () => {
+  emit("change")
+}
 </script>
 
 <style lang="scss" scoped>

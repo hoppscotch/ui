@@ -1,12 +1,31 @@
 <template>
-  <button v-if="renderedTag === 'BUTTON'" aria-label="button" role="button" v-bind="$attrs">
+  <button
+    v-if="renderedTag === 'BUTTON'"
+    aria-label="button"
+    role="button"
+    v-bind="$attrs"
+    :tabindex="$attrs.disabled ? -1 : 0"
+  >
     <slot></slot>
   </button>
-  <a v-else-if="renderedTag === 'ANCHOR' && !blank" aria-label="Link" :href="to" role="link" v-bind="updatedAttrs">
+  <a
+    v-else-if="renderedTag === 'ANCHOR' && !blank"
+    :aria-label="`Internal Link: ${to}`"
+    :href="to"
+    role="link"
+    v-bind="updatedAttrs"
+  >
     <slot></slot>
   </a>
-  <a v-else-if="renderedTag === 'ANCHOR' && blank" aria-label="Link" :href="to" role="link" target="_blank" rel="noopener"
-    v-bind="updatedAttrs">
+  <a
+    v-else-if="renderedTag === 'ANCHOR' && blank"
+    :aria-label="`External Link: ${to}`"
+    :href="to"
+    role="link"
+    target="_blank"
+    rel="noopener"
+    v-bind="updatedAttrs"
+  >
     <slot></slot>
   </a>
   <RouterLink v-else :to="to" v-bind="updatedAttrs">
@@ -30,16 +49,16 @@ export default {
 import { computed, useAttrs } from "vue"
 import { omit } from "lodash-es"
 
-const props = defineProps({
-  to: {
-    type: String,
-    default: "",
+const props = withDefaults(
+  defineProps<{
+    to: string
+    blank: boolean
+  }>(),
+  {
+    to: "",
+    blank: false,
   },
-  blank: {
-    type: Boolean,
-    default: false,
-  },
-})
+)
 
 const renderedTag = computed(() => {
   if (!props.to) {
@@ -67,6 +86,6 @@ const $attrs = useAttrs()
 const updatedAttrs = computed(() =>
   renderedTag.value === "ANCHOR" && !$attrs.disabled
     ? omit($attrs, "disabled")
-    : $attrs
+    : $attrs,
 )
 </script>
