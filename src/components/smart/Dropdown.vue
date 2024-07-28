@@ -4,6 +4,7 @@
         {{ title }}
         <svg
           class="dropdown-arrow"
+          :class="{ 'open': isOpen }"
           fill="#fff"
           height="16px"
           width="16px"
@@ -95,10 +96,24 @@
     transition: transform 0.3s;
   }
   
+  .dropdown-arrow.open {
+    transform: rotate(90deg);
+  }
+  
   .dropdown-menu {
     display: flex;
     flex-direction: column;
     padding: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   
   .dropdown-list {
