@@ -1,7 +1,7 @@
 <template>
   <div
     :style="{ backgroundColor: bgColor }"
-    class="flex flex-col space-y-4 rounded-md p-4"
+    class="flex flex-col gap-y-4 rounded-md p-4"
   >
     <div
       v-if="showImage"
