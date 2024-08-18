@@ -1,11 +1,11 @@
 <template>
-    <Story title="Badge">
-      <Variant title="Single">
-        <HoppSmartBadge />
+  <Story title="Badge">
+    <Variant title="Single">
+      <HoppBadge />
     </Variant>
-    </Story>
-  </template>
+  </Story>
+</template>
 
-  <script setup lang="ts">
-  import { HoppSmartBadge } from "../components/smart"
-  </script>
+<script setup lang="ts">
+import { HoppBadge } from "../components"
+</script>
