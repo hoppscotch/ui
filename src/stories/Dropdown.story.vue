@@ -1,15 +1,20 @@
 <template>
   <Story title="Dropdown">
-    <Variant title="Single">
-      <HoppSmartDropdown @item-click="handleItemClick" />
+    <Variant>
+      <HoppDropdown>
+        <template #button>
+          <button>Dropdown menu</button>
+        </template>
+        <template #content>
+          <div style="min-width: 300px">
+            <p>Dropdown content</p>
+          </div>
+        </template>
+      </HoppDropdown>
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import { HoppSmartDropdown } from "../components/smart";
-
-const handleItemClick = (item:any) => {
-  console.log('Item clicked:', item);
-};
+import { HoppDropdown } from "../components"
 </script>
