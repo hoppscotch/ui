@@ -64,11 +64,11 @@ You can use the components in your Vue templates like this:
 
 ```ts
 <template>
-  <HoppButtonPrimary label="Click me" />
+  <HoppButton label="Click me" />
 </template>
 
 <script lang="ts" setup>
-import { HoppButtonPrimary } from "@hoppscotch/ui"
+import { HoppButton } from "@hoppscotch/ui"
 </script>
 ```
 
@@ -76,7 +76,7 @@ If you're using `unplugin-vue-components` in your project, you can import the co
 
 ```ts
 <template>
-  <HoppButtonPrimary label="Click me" />
+  <HoppButton label="Click me" />
 </template>
 
 <script lang="ts" setup>

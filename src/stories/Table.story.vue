@@ -69,7 +69,7 @@
                 placeholder="Search.."
               />
             </div>
-            <HoppButtonPrimary
+            <HoppButton
               :icon="IconArrowUpDown"
               label="Sort"
               class="rounded-none"
@@ -86,7 +86,7 @@
 import { computed, onMounted, ref, Ref } from "vue"
 import { CellHeading, Direction } from "~/components/smart/Table.vue"
 import IconArrowUpDown from "~icons/lucide/arrow-up-down"
-import { HoppButtonPrimary, HoppSmartInput } from ".."
+import { HoppButton, HoppSmartInput } from ".."
 import { HoppSmartSpinner, HoppSmartTable } from "../components/smart"
 
 type List = {
