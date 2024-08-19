@@ -1,13 +1,24 @@
 <template>
   <HoppSmartLink
     :to="to"
-    :blank="blank"
-    class="relative inline-flex items-center justify-center py-2 font-semibold whitespace-nowrap transition focus:outline-none focus-visible:bg-accentDark"
     :exact="exact"
+    :blank="blank"
+    class="relative inline-flex items-center justify-center whitespace-nowrap py-2 font-semibold transition focus:outline-none focus-visible:bg-accentDark"
     :class="[
-      color
+      color && type === 'primary'
         ? `text-${color}-800 bg-${color}-200 hover:(text-${color}-900 bg-${color}-300) focus-visible:(text-${color}-900 bg-${color}-300)`
-        : `bg-accent text-accentContrast hover:bg-accentDark focus-visible:bg-accentDark`,
+        : '',
+      color && type === 'secondary'
+        ? `text-${color}-500 hover:text-${color}-600 focus-visible:text-${color}-600`
+        : '',
+      {
+        'bg-accent text-accentContrast hover:bg-accentDark focus-visible:bg-accentDark':
+          type === 'primary' && !color,
+      },
+      {
+        'text-secondary hover:text-secondaryDark focus-visible:text-secondaryDark':
+          type === 'secondary' && !color,
+      },
       label ? 'px-4 py-2' : 'p-2',
       rounded ? 'rounded-full' : 'rounded',
       { 'cursor-not-allowed opacity-75': disabled },
@@ -83,6 +94,7 @@ interface Props {
   gradient?: boolean
   outline?: boolean
   shortcut?: string[]
+  type?: "primary" | "secondary"
 }
 
 withDefaults(defineProps<Props>(), {
@@ -102,5 +114,6 @@ withDefaults(defineProps<Props>(), {
   gradient: false,
   outline: false,
   shortcut: () => [],
+  type: "primary",
 })
 </script>
