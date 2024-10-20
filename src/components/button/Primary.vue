@@ -108,9 +108,7 @@ const props = withDefaults(defineProps<Props>(), {
 const handleKeypress = (event: KeyboardEvent) => {
   // Check if the button is in a loading state
   if (props.loading && (event.key === "Enter" || event.key === " ")){
-    event.preventDefault(); // Prevent keypresses when loading
-  } else {
-    console.log('Enter succeeds as normal')
+    event.preventDefault();
   }
 };
 </script>
