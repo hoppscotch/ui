@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col flex-1">
+  <div class="flex flex-1 flex-col">
     <div
       v-if="rootNodes.status === 'loaded' && rootNodes.data.length > 0"
       class="flex flex-col"
@@ -7,11 +7,12 @@
       <div
         v-for="rootNode in rootNodes.data"
         :key="rootNode.id"
-        class="flex flex-col flex-1"
+        class="flex flex-1 flex-col"
       >
         <SmartTreeBranch
           :root-nodes-length="rootNodes.data.length"
           :node-item="rootNode"
+          :expand-all="expandAll"
           :adapter="adapter as SmartTreeAdapter<T>"
         >
           <template
@@ -34,14 +35,14 @@
     </div>
     <div
       v-else-if="rootNodes.status === 'loading'"
-      class="flex flex-col items-center justify-center flex-1 p-4"
+      class="flex flex-1 flex-col items-center justify-center p-4"
     >
       <SmartSpinner class="my-4" />
       <span class="text-secondaryLight">{{ t?.("state.loading") }}</span>
     </div>
     <div
       v-if="rootNodes.status === 'loaded' && rootNodes.data.length === 0"
-      class="flex flex-col flex-1"
+      class="flex flex-1 flex-col"
     >
       <!-- eslint-disable-next-line vue/no-deprecated-filter -->
       <slot name="emptyNode" :node="null as TreeNode<T> | null"></slot>
@@ -63,6 +64,10 @@ const props = defineProps<{
    * @template T The type of the data that will be stored in the tree
    */
   adapter: SmartTreeAdapter<T>
+  /**
+   *  open by default
+   */
+  expandAll?: boolean
 }>()
 
 /**
