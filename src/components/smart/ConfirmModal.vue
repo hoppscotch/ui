@@ -14,18 +14,12 @@
     </template>
     <template #footer>
       <span class="flex space-x-2">
-        <HoppButtonPrimary
+        <HoppButton
           v-focus
           :label="yes ?? t?.('action.yes') ?? 'Yes'"
           :loading="!!loadingState"
           outline
           @click="resolve"
-        />
-        <HoppButtonSecondary
-          :label="no ?? t?.('action.no') ?? 'No'"
-          filled
-          outline
-          @click="hideModal"
         />
       </span>
     </template>
@@ -34,7 +28,7 @@
 
 <script setup lang="ts">
 import { inject } from "vue"
-import { HoppButtonPrimary, HoppButtonSecondary } from "../button"
+import { HoppButton } from "../button"
 import { HoppSmartModal } from "."
 import { HoppUIPluginOptions, HOPP_UI_OPTIONS } from "./../../plugin"
 
