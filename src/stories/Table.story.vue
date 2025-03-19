@@ -1,6 +1,12 @@
 <template>
   <Story title="Table">
     <Variant title="General">
+      <div class="mb-3">
+        <p class="mb-1 text-sm">
+          This example demonstrates how to implement a table with default
+          configurations
+        </p>
+      </div>
       <HoppSmartTable
         :headings="headings"
         :loading="loading"
@@ -11,6 +17,12 @@
 
     <!-- Custom implementation of the Table -->
     <Variant title="Custom">
+      <div class="mb-3">
+        <p class="mb-1 text-sm">
+          This example demonstrates how to use the table component with custom
+          configurations
+        </p>
+      </div>
       <HoppSmartTable :loading="loading" :list="list">
         <template #head>
           <th
@@ -49,8 +61,47 @@
       </HoppSmartTable>
     </Variant>
 
+    <!-- Custom Row Styles -->
+    <Variant title="Custom Row Styles">
+      <div class="mb-3">
+        <p class="mb-1 text-sm">
+          This example demonstrates how to customize row styles based on data:
+        </p>
+        <ul class="list-disc pl-5 text-xs">
+          <li>
+            Rows with members > 10 are highlighted in
+            <span class="text-green-500">green</span>
+          </li>
+          <li>
+            Rows with role containing "Lab" are highlighted in
+            <span class="text-yellow-500">yellow</span>
+          </li>
+        </ul>
+      </div>
+      <HoppSmartTable
+        :headings="headings"
+        :list="list"
+        :row-styles="rowStyles"
+        :get-row-style-key="getRowStyleKey"
+      />
+    </Variant>
+
     <!-- Extending the Table functionality -->
     <Variant title="Extension">
+      <div class="mb-3">
+        <p class="mb-1 text-sm">
+          This example demonstrates how to extend the table functionality:
+        </p>
+        <ul class="list-disc pl-5 text-xs">
+          <li>
+            Added a search functionality to filter rows based on the search
+            query
+          </li>
+          <li>
+            Added a sort functionality to sort rows based on the name column
+          </li>
+        </ul>
+      </div>
       <HoppSmartTable
         :headings="headings"
         :loading="loading"
@@ -151,4 +202,20 @@ const extensionList = computed(() => {
     )
   })
 })
+
+// Custom Row Styles
+const rowStyles = {
+  majorityMembers: {
+    classes: "bg-green-400 text-green-900 hover:bg-green-200",
+  },
+  labRole: {
+    classes: "bg-yellow-300 text-yellow-900 hover:bg-yellow-100",
+  },
+}
+
+const getRowStyleKey = (row: List) => {
+  if (row.members > 10) return "majorityMembers"
+  if (row.role.includes("Lab")) return "labRole"
+  return null
+}
 </script>

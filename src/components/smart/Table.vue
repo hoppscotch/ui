@@ -55,7 +55,10 @@
             v-for="(rowData, rowIndex) in workingList"
             :key="rowIndex"
             class="rounded-xl text-secondaryDark hover:cursor-pointer hover:bg-divider"
-            :class="{ 'divide-x divide-divider': showYBorder }"
+            :class="[
+              { 'divide-x divide-divider': showYBorder },
+              getRowCustomStyle(rowData),
+            ]"
             @click="onRowClicked(rowData)"
           >
             <td v-if="selectedRows">
@@ -95,7 +98,7 @@
 import { useVModel } from "@vueuse/core"
 import { isEqual } from "lodash-es"
 import { computed, ref, watch, watchEffect } from "vue"
-import { HoppSmartSpinner } from ".."
+import HoppSmartSpinner from "./Spinner.vue"
 
 export type CellHeading = {
   key: string
@@ -103,48 +106,66 @@ export type CellHeading = {
   preventClick?: boolean
 }
 
-export type Item = Record<string, unknown>
+export type RowStyle = {
+  classes?: string
+  style?: Record<string, string>
+}
+
+export type Item<T = Record<string, unknown>> = T
 
 const props = withDefaults(
   defineProps<{
-    /** Whether to show the vertical border between columns */
+    // Whether to show vertical borders between cells
     showYBorder?: boolean
-    /**  The list of items to be displayed in the table */
-    list: Item[]
-    /** The headings of the table */
+
+    // List of items to be displayed in the table
+    list: Item<any>[]
+
+    // Headings for the table
     headings?: CellHeading[]
 
-    /** Contains the rows selected */
-    selectedRows?: Item[]
+    // Currently selected rows
+    selectedRows?: Item<any>[]
 
-    /** Whether to enable sorting */
+    // Sorting configurations
     sort?: {
-      /** The key to sort the list by */
       key: string
       direction: Direction
     }
 
-    /** Whether to show a loading spinner */
+    // Whether the table is in loading state
     loading?: boolean
+
+    /**
+     * Custom styles for rows:
+     * - Object: key-based (determined by getRowStyleKey)
+     * - String: applied as CSS class to all rows
+     */
+    rowStyles?: Record<string, RowStyle> | string
+    /**
+     * Function to determine which row style to apply
+     * Returns rowStyles directly if it's a string
+     * R eturns a key that exists in rowStyles (when rowStyles is an object), or null if no style should be applied
+     */
+    getRowStyleKey?: (rowData: Item<any>) => string | null
   }>(),
   {
     showYBorder: false,
     sort: undefined,
     selectedRows: undefined,
     loading: false,
+    rowStyles: () => ({}),
+    getRowStyleKey: () => null,
   },
 )
 
 const emit = defineEmits<{
-  (event: "onRowClicked", item: Item): void
-  (event: "update:list", list: Item[]): void
-  (event: "update:selectedRows", selectedRows: Item[]): void
+  (event: "onRowClicked", item: Item<any>): void
+  (event: "update:list", list: Item<any>[]): void
+  (event: "update:selectedRows", selectedRows: Item<any>[]): void
 }>()
 
-// The working version of the list that is used to perform operations upon
 const workingList = useVModel(props, "list", emit)
-
-// Checkbox functionality
 const selectedRows = useVModel(props, "selectedRows", emit)
 
 watch(workingList.value, (updatedList) => {
@@ -156,14 +177,14 @@ watch(workingList.value, (updatedList) => {
   }
 })
 
-const onRowClicked = (item: Item) => emit("onRowClicked", item)
+const onRowClicked = (item: Item<any>) => emit("onRowClicked", item)
 
-const isRowSelected = (item: Item) => {
+const isRowSelected = (item: Item<any>) => {
   const { selected, ...data } = item
   return selectedRows.value?.some((row) => isEqual(row, data))
 }
 
-const toggleRow = (item: Item) => {
+const toggleRow = (item: Item<any>) => {
   item.selected = !item.selected
   const { selected, ...data } = item
 
@@ -212,7 +233,16 @@ watchEffect(() => {
   }
 })
 
-// Sort List by key and direction which can set to ascending or descending
+const getRowCustomStyle = (rowData: Item<any>) => {
+  if (typeof props.rowStyles === "string") {
+    return props.rowStyles
+  }
+
+  const styleKey = props.getRowStyleKey?.(rowData)
+  if (!styleKey || !props.rowStyles[styleKey]) return ""
+  return props.rowStyles[styleKey].classes || ""
+}
+
 export type Direction = "ascending" | "descending"
 
 const sortList = (key: string, direction: Direction) => {
