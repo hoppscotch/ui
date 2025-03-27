@@ -49,7 +49,7 @@ const props = withDefaults(
   defineProps<{
     id: string
     styles: string
-    modelValue: string | null
+    modelValue: string | null | undefined
     placeholder: string
     inputStyles: string | (string | false)[]
     type: string
@@ -67,7 +67,7 @@ const props = withDefaults(
     label: "",
     disabled: false,
     autofocus: true,
-  }
+  },
 )
 
 const emit = defineEmits<{
@@ -84,6 +84,6 @@ onKeyStroke(
       return emit("submit")
     }
   },
-  { target: inputRef, eventName: "keydown" }
+  { target: inputRef, eventName: "keydown" },
 )
 </script>
