@@ -58,7 +58,7 @@
                     <component :is="tabMeta.suffix" />
                   </div>
 
-                  <HoppButtonSecondary
+                  <HoppButton
                     v-if="tabMeta.isRemovable"
                     v-tippy="{ theme: 'tooltip', delay: [500, 20] }"
                     :icon="IconX"
@@ -87,7 +87,7 @@
               v-if="canAddNewTab"
               class="z-[8] flex h-full items-center justify-center bg-primaryLight px-3"
             >
-              <HoppButtonSecondary
+              <HoppButton
                 v-tippy="{ theme: 'tooltip' }"
                 :title="newText ?? t?.('action.new') ?? 'New'"
                 :icon="IconPlus"
@@ -129,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { HoppButtonSecondary } from "../button"
+import { HoppButton } from "../button"
 import IconPlus from "~icons/lucide/plus"
 import IconX from "~icons/lucide/x"
 import { pipe } from "fp-ts/function"

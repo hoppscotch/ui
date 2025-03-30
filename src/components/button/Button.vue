@@ -3,24 +3,35 @@
     :to="to"
     :exact="exact"
     :blank="blank"
-    class="inline-flex items-center justify-center font-semibold transition whitespace-nowrap focus:outline-none"
+    class="relative inline-flex items-center justify-center whitespace-nowrap py-2 font-semibold transition focus:outline-none focus-visible:bg-accentDark"
     :class="[
-      color
+      color && type === 'primary'
+        ? `text-${color}-800 bg-${color}-200 hover:(text-${color}-900 bg-${color}-300) focus-visible:(text-${color}-900 bg-${color}-300)`
+        : '',
+      color && type === 'secondary'
         ? `text-${color}-500 hover:text-${color}-600 focus-visible:text-${color}-600`
-        : 'text-secondary hover:text-secondaryDark focus-visible:text-secondaryDark',
-      { 'pointer-events-none': loading },
-      label ? 'rounded px-4 py-2' : 'p-2',
-      { 'rounded-full': rounded },
-      { 'opacity-75 cursor-not-allowed': disabled },
-      { 'flex-row-reverse': reverse },
-      { 'px-6 py-4 text-lg': large },
+        : '',
       {
-        'border border-divider hover:border-dividerDark focus-visible:border-dividerDark':
-          outline,
+        'bg-accent text-accentContrast hover:bg-accentDark focus-visible:bg-accentDark':
+          type === 'primary' && !color,
       },
       {
-        'bg-primaryLight hover:bg-primaryDark focus-visible:bg-primaryDark':
-          filled,
+        'text-secondary hover:text-secondaryDark focus-visible:text-secondaryDark':
+          type === 'secondary' && !color,
+      },
+      label ? 'px-4 py-2' : 'p-2',
+      rounded ? 'rounded-full' : 'rounded',
+      { 'cursor-not-allowed opacity-75': disabled },
+      { 'pointer-events-none': loading },
+      { 'px-6 py-4 text-lg': large },
+      { 'shadow-lg hover:shadow-xl': shadow },
+      {
+        'bg-gradient-to-tr from-gradientFrom via-gradientVia to-gradientTo text-white':
+          gradient,
+      },
+      {
+        'border border-accent hover:border-accentDark focus-visible:border-accentDark':
+          outline,
       },
     ]"
     :disabled="disabled"
@@ -28,9 +39,8 @@
     role="button"
   >
     <span
-      v-if="!loading"
       class="inline-flex items-center justify-center whitespace-nowrap"
-      :class="{ 'flex-row-reverse': reverse }"
+      :class="[{ 'flex-row-reverse': reverse }, { 'opacity-50': loading }]"
     >
       <component
         :is="icon"
@@ -41,20 +51,25 @@
           label ? (reverse ? 'ml-2' : 'mr-2') : '',
         ]"
       />
-      <div class="truncate max-w-[16rem]">
+      <div class="max-w-[16rem] truncate">
         {{ label }}
       </div>
       <div v-if="shortcut.length" class="<sm:hidden">
         <kbd
           v-for="(key, index) in shortcut"
           :key="`key-${index}`"
-          class="shortcut-key !bg-inherit"
+          class="shortcut-key !border-accentLight !bg-accentDark"
         >
           {{ key }}
         </kbd>
       </div>
     </span>
-    <HoppSmartSpinner v-else />
+    <span
+      v-if="loading"
+      class="absolute inset-0 flex items-center justify-center"
+    >
+      <HoppSmartSpinner />
+    </span>
   </HoppSmartLink>
 </template>
 
@@ -72,13 +87,16 @@ interface Props {
   color?: string
   disabled?: boolean
   loading?: boolean
+  large?: boolean
+  shadow?: boolean
   reverse?: boolean
   rounded?: boolean
-  large?: boolean
+  gradient?: boolean
   outline?: boolean
   shortcut?: string[]
-  filled?: boolean
+  type?: "primary" | "secondary"
 }
+
 withDefaults(defineProps<Props>(), {
   to: "",
   exact: true,
@@ -89,11 +107,13 @@ withDefaults(defineProps<Props>(), {
   color: "",
   disabled: false,
   loading: false,
+  large: false,
+  shadow: false,
   reverse: false,
   rounded: false,
-  large: false,
+  gradient: false,
   outline: false,
   shortcut: () => [],
-  filled: false,
+  type: "primary",
 })
 </script>
