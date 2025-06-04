@@ -348,7 +348,11 @@ watch(
             // We still need setTimeout here because the element might not be fully in position yet
             setTimeout(() => {
               const { scrollWidth, clientWidth, scrollLeft } =
-                scrollContainer.value!
+                scrollContainer.value || {
+                  scrollWidth: 0,
+                  clientWidth: 0,
+                  scrollLeft: 0,
+                }
               const maxScroll = scrollWidth - clientWidth
               thumbPosition.value = (scrollLeft / maxScroll) * MAX_SCROLL_VALUE
             }, 300)
