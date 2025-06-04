@@ -26,6 +26,7 @@
     :disabled="disabled"
     :tabindex="loading ? '-1' : '0'"
     role="button"
+    @keydown="handleKeypress"
   >
     <span
       class="inline-flex items-center justify-center whitespace-nowrap"
@@ -85,7 +86,7 @@ interface Props {
   shortcut?: string[]
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   to: "",
   exact: true,
   blank: false,
@@ -103,4 +104,11 @@ withDefaults(defineProps<Props>(), {
   outline: false,
   shortcut: () => [],
 })
+
+const handleKeypress = (event: KeyboardEvent) => {
+  // Check if the button is in a loading state
+  if (props.loading && (event.key === "Enter" || event.key === " ")){
+    event.preventDefault();
+  }
+};
 </script>
