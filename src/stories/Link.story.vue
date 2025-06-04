@@ -5,7 +5,7 @@
     </Variant>
     <Variant title="Button Link">
       <HoppSmartLink :to="link" :blank="true">
-        <HoppButtonPrimary label="Click here" />
+        <HoppButton label="Click here" />
       </HoppSmartLink>
     </Variant>
   </Story>
@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { HoppSmartLink } from "../components/smart"
-import { HoppButtonPrimary } from "../components/button"
+import { HoppButton } from "../components/button"
 import { ref } from "vue"
 
 const link = ref("/")

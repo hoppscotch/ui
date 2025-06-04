@@ -2,7 +2,7 @@
   <HoppModal title="Dialog with Input field" @close="emit('modal-reject')">
     <template #body>
       <div>
-        <HoppButtonSecondary
+        <HoppButton
           label="Open Nested Dialog with Input"
           @click="openNestedInputDialog"
         />
@@ -16,11 +16,10 @@
       </div>
     </template>
     <template #footer>
-      <HoppButtonPrimary
+      <HoppButton
         label="Submit from Parent"
         @click="emit('modal-resolve', { text })"
       />
-      <HoppButtonSecondary label="Cancel" @click="emit('modal-reject')" />
     </template>
   </HoppModal>
 </template>
@@ -29,8 +28,7 @@
 import { ref } from "vue"
 import { HoppModal } from "./../"
 import {
-  HoppButtonPrimary,
-  HoppButtonSecondary,
+  HoppButton,
   HoppSmartInput,
 } from "./../../index"
 
