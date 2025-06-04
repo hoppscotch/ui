@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col flex-1 h-auto overflow-y-hidden flex-nowrap">
+  <div class="flex h-auto flex-1 flex-col flex-nowrap overflow-y-hidden">
     <div
-      class="sticky top-0 z-10 flex-shrink-0 overflow-x-auto tabs group-tabs divide-x divide-dividerLight bg-primaryLight"
+      class="tabs group-tabs sticky top-0 z-10 flex-shrink-0 divide-x divide-dividerLight overflow-x-auto bg-primaryLight"
     >
       <div
-        class="flex flex-1 flex-shrink-0 w-0 overflow-hidden"
+        class="flex w-0 flex-1 flex-shrink-0 overflow-hidden"
         ref="scrollContainer"
       >
         <div
@@ -17,7 +17,7 @@
               :list="tabEntries"
               :style="tabStyles"
               :item-key="'window-'"
-              class="flex flex-shrink-0 overflow-x-auto divide-x divide-dividerLight transition"
+              class="flex flex-shrink-0 divide-x divide-dividerLight overflow-x-auto transition"
               @sort="sortTabs"
             >
               <template #item="{ element: [tabID, tabMeta] }">
@@ -33,21 +33,21 @@
                 >
                   <span
                     v-if="tabMeta.icon"
-                    class="flex items-center justify-center cursor-pointer"
+                    class="flex cursor-pointer items-center justify-center"
                   >
-                    <component :is="tabMeta.icon" class="w-4 h-4 svg-icons" />
+                    <component :is="tabMeta.icon" class="svg-icons h-4 w-4" />
                   </span>
 
                   <div
                     v-if="!tabMeta.tabhead"
-                    class="w-full px-2 text-left truncate"
+                    class="w-full truncate px-2 text-left"
                   >
                     <span class="truncate">
                       {{ tabMeta.label }}
                     </span>
                   </div>
 
-                  <div v-else class="w-full text-left truncate">
+                  <div v-else class="w-full truncate text-left">
                     <component :is="tabMeta.tabhead" />
                   </div>
 
@@ -81,7 +81,7 @@
             </draggable>
           </div>
           <div
-            class="sticky right-0 z-20 flex items-center justify-center flex-shrink-0 overflow-x-auto"
+            class="sticky right-0 z-20 flex flex-shrink-0 items-center justify-center overflow-x-auto"
           >
             <span
               v-if="canAddNewTab"
@@ -109,7 +109,7 @@
         min="1"
         :max="MAX_SCROLL_VALUE"
         v-model="thumbPosition"
-        class="absolute bottom-0 left-0 hidden slider"
+        class="slider absolute bottom-0 left-0 hidden"
         :class="{
           '!block': scrollThumb.show,
         }"
@@ -122,7 +122,7 @@
         id="myRange"
       />
     </div>
-    <div class="w-full h-full contents">
+    <div class="contents h-full w-full">
       <slot></slot>
     </div>
   </div>
@@ -306,7 +306,12 @@ const scroll = (e: WheelEvent) => {
   scrollContainer.value!.scrollLeft += e.deltaY
   scrollContainer.value!.scrollLeft += e.deltaX
 
-  const { scrollWidth, clientWidth, scrollLeft } = scrollContainer.value!
+  const { scrollWidth, clientWidth, scrollLeft } = scrollContainer.value || {
+    scrollWidth: 0,
+    clientWidth: 0,
+    scrollLeft: 0,
+  }
+
   const maxScroll = scrollWidth - clientWidth
   thumbPosition.value = (scrollLeft / maxScroll) * MAX_SCROLL_VALUE
 }
