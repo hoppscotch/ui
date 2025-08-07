@@ -12,7 +12,7 @@
       </h3>
     </div>
     <div class="flex flex-1 items-center justify-end">
-      <HoppButtonSecondary
+      <HoppButton
         v-if="showCloseIcon"
         v-tippy="{ theme: 'tooltip', delay: [500, 20] }"
         :title="closeText ?? t?.('action.close') ?? 'Close'"
@@ -27,7 +27,7 @@
 import { inject } from "vue"
 import { HOPP_UI_OPTIONS, HoppUIPluginOptions } from "./../../plugin"
 import IconX from "~icons/lucide/x"
-import { HoppButtonSecondary } from "./../button"
+import { HoppButton } from "./../button"
 
 const { t } = inject<HoppUIPluginOptions>(HOPP_UI_OPTIONS) ?? {}
 

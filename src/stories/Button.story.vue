@@ -1,14 +1,14 @@
 <template>
   <Story title="Button">
     <Variant title="Primary">
-      <HoppButtonPrimary label="Button" />
+      <HoppButton label="Primary Button" />
     </Variant>
     <Variant title="Secondary">
-      <HoppButtonSecondary label="Button" />
+      <HoppButton type="secondary" :outline="true" label="Secondary Button" />
     </Variant>
   </Story>
 </template>
 
 <script setup lang="ts">
-import { HoppButtonPrimary, HoppButtonSecondary } from "../components/button"
+import { HoppButton } from "../components/button"
 </script>

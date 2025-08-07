@@ -48,7 +48,7 @@
                 </h3>
               </div>
               <div class="flex items-center justify-end flex-1">
-                <HoppButtonSecondary
+                <HoppButton
                   v-if="dimissible"
                   v-tippy="{ theme: 'tooltip', delay: [500, 20] }"
                   :title="closeText ?? t?.('action.close') ?? 'Close'"
@@ -95,7 +95,7 @@ const stack = (() => {
 </script>
 
 <script setup lang="ts">
-import { HoppButtonSecondary } from "../button"
+import { HoppButton } from "../button"
 import IconX from "~icons/lucide/x"
 import {
   ref,

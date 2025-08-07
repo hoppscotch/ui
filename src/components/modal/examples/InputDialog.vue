@@ -12,14 +12,9 @@
       />
     </template>
     <template #footer>
-      <HoppButtonPrimary
+      <HoppButton
         label="Submit"
         @click="emit('modal-resolve', { text })"
-      />
-      <HoppButtonSecondary
-        filled
-        label="Cancel"
-        @click="emit('modal-reject')"
       />
     </template>
   </HoppModal>
@@ -30,8 +25,7 @@ import { ref } from "vue"
 import { HoppModal } from "./../"
 import {
   HoppSmartInput,
-  HoppButtonSecondary,
-  HoppButtonPrimary,
+  HoppButton,
 } from "./../../index"
 
 const text = ref<string>("")
