@@ -3,7 +3,6 @@
     class="group inline-flex cursor-pointer flex-nowrap items-center justify-center transition hover:text-secondaryDark"
     role="checkbox"
     :aria-checked="on"
-    @click="emit('change')"
   >
     <input
       :id="checkboxID"
