@@ -234,16 +234,24 @@ onBeforeUnmount(() => {
   isUnmounting.value = true
 })
 
-// Maps each indicator variant to its dot color. Literal class strings (not
-// interpolated) so Tailwind's JIT compiles them into the shipped stylesheet.
-const indicatorDotClass = (variant: IndicatorVariant = "accent"): string =>
-  ({
-    accent: "bg-accentLight",
-    error: "bg-error",
-    warning: "bg-warning",
-    success: "bg-success",
-    info: "bg-info",
-  })[variant]
+// Maps each indicator variant to its dot color. Hoisted out of the lookup
+// function so it isn't reallocated on every render; typed
+// `Record<IndicatorVariant, string>` so extending the union forces a matching
+// entry here. Literal class strings (not interpolated) so Tailwind's JIT
+// compiles them into the shipped stylesheet.
+const INDICATOR_DOT_CLASSES: Record<IndicatorVariant, string> = {
+  accent: "bg-accentLight",
+  error: "bg-error",
+  warning: "bg-warning",
+  success: "bg-success",
+  info: "bg-info",
+}
+
+// Falls back to the accent class for an undefined or — since Vue doesn't enforce
+// the TS union at runtime — unrecognized `variant`, so the dot always renders a
+// visible color instead of silently dropping the class.
+const indicatorDotClass = (variant?: IndicatorVariant): string =>
+  INDICATOR_DOT_CLASSES[variant ?? "accent"] ?? INDICATOR_DOT_CLASSES.accent
 
 const selectTab = (id: string) => {
   emit("update:modelValue", id)
