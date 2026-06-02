@@ -24,7 +24,7 @@
               }"
             >
               <button
-                v-for="[tabID, tabMeta] in tabGroup"
+                v-for="([tabID, tabMeta]) in tabGroup"
                 :key="tabID"
                 v-tippy="{
                   theme: 'tooltip',
@@ -99,7 +99,12 @@ import { ref, computed, provide, onBeforeUnmount } from "vue"
  * semantic variants map to feedback colors (e.g. `"error"` flags a tab that
  * needs attention). Optional/undefined falls back to accent for older consumers.
  */
-export type IndicatorVariant = "accent" | "error" | "warning" | "success" | "info"
+export type IndicatorVariant =
+  | "accent"
+  | "error"
+  | "warning"
+  | "success"
+  | "info"
 
 export type TabMeta = {
   label: string | null
@@ -166,11 +171,18 @@ const throwError = (message: string): never => {
 const tabEntries = ref<Array<[string, TabMeta]>>([])
 
 // Resolves a tab's sort weight. `order` is typed `number`, but Vue won't stop a
-// consumer binding a non-finite value at runtime; coerce NaN/±Infinity/undefined
-// to 0 so the comparator stays well-ordered and the registration-index tiebreak
-// still applies.
-const orderOf = (meta: TabMeta): number =>
-  Number.isFinite(meta.order) ? (meta.order as number) : 0
+// consumer passing `order="1"` (a string, an easy slip for `:order="1"`), so we
+// coerce number/string inputs via `Number()`. Everything else hits the early
+// `typeof` guard and maps to 0 without calling `Number()` — covering `undefined`
+// (the unset default) and `Symbol`, whose `Number()` conversion throws. Numeric
+// inputs that coerce to non-finite (non-numeric strings, NaN, ±Infinity) also
+// map to 0, keeping the comparator well-ordered with its index tiebreak.
+const orderOf = (meta: TabMeta): number => {
+  const raw = meta.order
+  if (typeof raw !== "number" && typeof raw !== "string") return 0
+  const n = Number(raw)
+  return Number.isFinite(n) ? n : 0
+}
 
 // Tab related logic — render order respects `tabMeta.order` as a primary
 // sort key, with registration order as a stable tiebreaker. This lets
@@ -263,11 +275,16 @@ const INDICATOR_DOT_CLASSES: Record<IndicatorVariant, string> = {
   info: "bg-info",
 }
 
-// Falls back to the accent class for an undefined or — since Vue doesn't enforce
-// the TS union at runtime — unrecognized `variant`, so the dot always renders a
-// visible color instead of silently dropping the class.
-const indicatorDotClass = (variant?: IndicatorVariant): string =>
-  INDICATOR_DOT_CLASSES[variant ?? "accent"] ?? INDICATOR_DOT_CLASSES.accent
+// Falls back to accent for an undefined or — since Vue doesn't enforce the TS
+// union at runtime — unrecognized `variant`. The own-property check stops
+// inherited keys ("constructor", "__proto__", …) returning a non-string, so the
+// dot always renders a visible color instead of dropping the class.
+const indicatorDotClass = (variant?: IndicatorVariant): string => {
+  const key = variant ?? "accent"
+  return Object.prototype.hasOwnProperty.call(INDICATOR_DOT_CLASSES, key)
+    ? INDICATOR_DOT_CLASSES[key]
+    : INDICATOR_DOT_CLASSES.accent
+}
 
 const selectTab = (id: string) => {
   emit("update:modelValue", id)

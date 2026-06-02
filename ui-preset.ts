@@ -25,12 +25,10 @@ export default {
         bannerInfo: "var(--banner-info-color)",
         bannerWarning: "var(--banner-warning-color)",
         bannerError: "var(--banner-error-color)",
-        // Semantic feedback colors for inline signals — error indicator dots,
-        // validation accents, etc. Themeable via `--feedback-*-color` (defined
-        // in hopp-ui themes.scss, dark-only); the literal fallbacks (Tailwind's
-        // 500 shades) keep them working where that stylesheet isn't loaded.
-        // Named `--feedback-*` to avoid colliding with the platform's
-        // `--status-*` (HTTP response), `--method-*`, and `--error-color` vars.
+        // Semantic feedback colors for inline signals (e.g. tab indicator dots),
+        // themeable via `--feedback-*-color` (@hoppscotch/ui's themes.scss, dark-only).
+        // Literal 500-shade fallbacks keep them working where that stylesheet isn't
+        // loaded; `--feedback-*` avoids colliding with `--status-*`/`--method-*`/`--error-color`.
         error: "var(--feedback-error-color, #ef4444)",
         warning: "var(--feedback-warning-color, #f59e0b)",
         success: "var(--feedback-success-color, #22c55e)",

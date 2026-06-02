@@ -44,11 +44,10 @@
   --popover-color: #1b1b1b;
   --editor-theme: "merbivore_soft";
 
-  // Semantic feedback colors for inline UI signals (e.g. the tab indicator dot).
-  // ui-preset's error/warning/success/info tokens read these. Prefixed
-  // `--feedback-*` so they don't collide with the platform's `--status-*` (HTTP
-  // response colors), `--method-*`, or the `--error-color` neutral. hopp-ui is
-  // dark-only, so these are Tailwind's 500 shades with no light-tuned set.
+  // Semantic feedback colors for inline UI signals (e.g. the tab indicator dot),
+  // read by ui-preset's error/warning/success/info tokens. The `--feedback-*`
+  // prefix avoids colliding with the platform's `--status-*`, `--method-*`, and
+  // `--error-color` vars. @hoppscotch/ui is dark-only — Tailwind's 500 shades.
   --feedback-error-color: #ef4444; // red-500
   --feedback-warning-color: #f59e0b; // amber-500
   --feedback-success-color: #22c55e; // green-500
