@@ -14,7 +14,7 @@ import {
   Component,
   markRaw,
 } from "vue"
-import { TabMeta, TabProvider } from "./Tabs.vue"
+import { TabMeta, TabProvider, IndicatorVariant } from "./Tabs.vue"
 
 const props = withDefaults(
   defineProps<{
@@ -23,15 +23,30 @@ const props = withDefaults(
     icon?: Component | object | string | null
     info?: string | null
     indicator?: boolean
+    /**
+     * Color of the indicator dot. `"accent"` (default) is neutral activity; the
+     * semantic variants (`"error"`, `"warning"`, `"success"`, `"info"`) let
+     * consumers flag a tab's state without reaching into the dot's internal
+     * classes via `:deep()`.
+     */
+    indicatorVariant?: IndicatorVariant
     disabled?: boolean
     alignLast?: boolean
+    /**
+     * Display-order hint. Lower numbers render first; ties resolve by
+     * registration order. Useful for tabs that toggle in/out via `v-if`
+     * but should still appear in a fixed position when present.
+     */
+    order?: number
   }>(),
   {
     icon: null,
     indicator: false,
+    indicatorVariant: "accent",
     info: null,
     disabled: false,
     alignLast: false,
+    order: 0,
   },
 )
 
@@ -43,10 +58,12 @@ const tabMeta = computed<TabMeta>(() => ({
       : props.icon,
 
   indicator: props.indicator,
+  indicatorVariant: props.indicatorVariant,
   info: props.info,
   label: props.label,
   disabled: props.disabled,
   alignLast: props.alignLast,
+  order: props.order,
 }))
 
 const {

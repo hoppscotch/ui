@@ -60,7 +60,8 @@
                 </span>
                 <span
                   v-if="tabMeta.indicator"
-                  class="ml-2 h-1 w-1 rounded-full bg-accentLight"
+                  class="ml-2 h-1 w-1 rounded-full"
+                  :class="indicatorDotClass(tabMeta.indicatorVariant)"
                 ></span>
               </button>
             </div>
@@ -93,13 +94,32 @@ import * as O from "fp-ts/Option"
 import type { Component, Ref } from "vue"
 import { ref, ComputedRef, computed, provide, onBeforeUnmount } from "vue"
 
+/**
+ * Color of the indicator dot. `"accent"` (default) is neutral activity; the
+ * semantic variants map to feedback colors (e.g. `"error"` flags a tab that
+ * needs attention). Optional/undefined falls back to accent for older consumers.
+ */
+export type IndicatorVariant = "accent" | "error" | "warning" | "success" | "info"
+
 export type TabMeta = {
   label: string | null
   icon: string | Component | null
   indicator: boolean
+  indicatorVariant?: IndicatorVariant
   info: string | null
   disabled: boolean
   alignLast: boolean
+  /**
+   * Display-order hint. Lower numbers render earlier. Defaults to 0 so the
+   * sort is stable in registration order for tabs that don't opt in.
+   * Lets consumers pin certain tabs (e.g. workspace-mode-specific tabs
+   * that appear/disappear via v-if) to a fixed position without relying
+   * on the order in which Vue mounts them.
+   *
+   * Optional for backward compatibility — older `<HoppSmartTab>` consumers
+   * that predate this field still work; the sort treats `undefined` as 0.
+   */
+  order?: number
 }
 
 export type TabProvider = {
@@ -145,10 +165,21 @@ const throwError = (message: string): never => {
 
 const tabEntries = ref<Array<[string, TabMeta]>>([])
 
-// Tab related logic
+// Tab related logic — render order respects `tabMeta.order` as a primary
+// sort key, with registration order as a stable tiebreaker. This lets
+// consumers pin a tab to a specific position regardless of when it mounts
+// (e.g. tabs gated behind `v-if` that toggle in and out at runtime).
 const alignedTabs = computed(() => {
-  const leftTabs = tabEntries.value.filter(([_, tabMeta]) => !tabMeta.alignLast)
-  const rightTabs = tabEntries.value.filter(([_, tabMeta]) => tabMeta.alignLast)
+  const indexed = tabEntries.value.map(
+    (entry, idx) => [entry, idx] as [[string, TabMeta], number],
+  )
+  indexed.sort(([[, a], aIdx], [[, b], bIdx]) => {
+    const delta = (a.order ?? 0) - (b.order ?? 0)
+    return delta !== 0 ? delta : aIdx - bIdx
+  })
+  const sorted = indexed.map(([entry]) => entry)
+  const leftTabs = sorted.filter(([_, tabMeta]) => !tabMeta.alignLast)
+  const rightTabs = sorted.filter(([_, tabMeta]) => tabMeta.alignLast)
   return { left: leftTabs, right: rightTabs }
 })
 
@@ -202,6 +233,17 @@ provide<TabProvider>("tabs-system", {
 onBeforeUnmount(() => {
   isUnmounting.value = true
 })
+
+// Maps each indicator variant to its dot color. Literal class strings (not
+// interpolated) so Tailwind's JIT compiles them into the shipped stylesheet.
+const indicatorDotClass = (variant: IndicatorVariant = "accent"): string =>
+  ({
+    accent: "bg-accentLight",
+    error: "bg-error",
+    warning: "bg-warning",
+    success: "bg-success",
+    info: "bg-info",
+  })[variant]
 
 const selectTab = (id: string) => {
   emit("update:modelValue", id)
