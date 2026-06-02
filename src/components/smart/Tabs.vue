@@ -24,8 +24,8 @@
               }"
             >
               <button
-                v-for="([tabID, tabMeta], index) in tabGroup"
-                :key="`tab-${index}`"
+                v-for="[tabID, tabMeta] in tabGroup"
+                :key="tabID"
                 v-tippy="{
                   theme: 'tooltip',
                   placement: 'left',
@@ -91,8 +91,8 @@ import { pipe } from "fp-ts/function"
 import { not } from "fp-ts/Predicate"
 import * as A from "fp-ts/Array"
 import * as O from "fp-ts/Option"
-import type { Component, Ref } from "vue"
-import { ref, ComputedRef, computed, provide, onBeforeUnmount } from "vue"
+import type { Component, ComputedRef, Ref } from "vue"
+import { ref, computed, provide, onBeforeUnmount } from "vue"
 
 /**
  * Color of the indicator dot. `"accent"` (default) is neutral activity; the
@@ -165,6 +165,13 @@ const throwError = (message: string): never => {
 
 const tabEntries = ref<Array<[string, TabMeta]>>([])
 
+// Resolves a tab's sort weight. `order` is typed `number`, but Vue won't stop a
+// consumer binding a non-finite value at runtime; coerce NaN/±Infinity/undefined
+// to 0 so the comparator stays well-ordered and the registration-index tiebreak
+// still applies.
+const orderOf = (meta: TabMeta): number =>
+  Number.isFinite(meta.order) ? (meta.order as number) : 0
+
 // Tab related logic — render order respects `tabMeta.order` as a primary
 // sort key, with registration order as a stable tiebreaker. This lets
 // consumers pin a tab to a specific position regardless of when it mounts
@@ -174,7 +181,7 @@ const alignedTabs = computed(() => {
     (entry, idx) => [entry, idx] as [[string, TabMeta], number],
   )
   indexed.sort(([[, a], aIdx], [[, b], bIdx]) => {
-    const delta = (a.order ?? 0) - (b.order ?? 0)
+    const delta = orderOf(a) - orderOf(b)
     return delta !== 0 ? delta : aIdx - bIdx
   })
   const sorted = indexed.map(([entry]) => entry)
@@ -214,9 +221,18 @@ const removeTabEntry = (tabID: string) => {
     O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`)),
   )
 
-  // If we tried to remove the active tabEntries, switch to first tab entry
-  if (props.modelValue === tabID)
-    if (tabEntries.value.length > 0) selectTab(tabEntries.value[0][0])
+  // If we removed the active tab, fall back to the first *enabled* tab in
+  // render order (left group before right), read from the same `alignedTabs`
+  // computed that drives the template — so the choice matches what the user
+  // sees once `order`/`alignLast` reshuffle the bar, and we never silently
+  // activate a disabled tab. If every remaining tab is disabled, fall back to
+  // the first one anyway: a valid (if disabled) active id still beats one left
+  // pointing at the just-removed tab.
+  if (props.modelValue === tabID) {
+    const ordered = [...alignedTabs.value.left, ...alignedTabs.value.right]
+    const next = ordered.find(([, meta]) => !meta.disabled) ?? ordered[0]
+    if (next) selectTab(next[0])
+  }
 }
 
 const isUnmounting = ref(false)

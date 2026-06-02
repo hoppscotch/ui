@@ -5,16 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  onMounted,
-  onBeforeUnmount,
-  inject,
-  computed,
-  watch,
-  Component,
-  markRaw,
-} from "vue"
-import { TabMeta, TabProvider, IndicatorVariant } from "./Tabs.vue"
+import { onMounted, onBeforeUnmount, inject, computed, watch, markRaw } from "vue"
+import type { Component } from "vue"
+import type { TabMeta, TabProvider, IndicatorVariant } from "./Tabs.vue"
 
 const props = withDefaults(
   defineProps<{
