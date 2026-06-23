@@ -94,11 +94,7 @@ import * as O from "fp-ts/Option"
 import type { Component, ComputedRef, Ref } from "vue"
 import { ref, computed, provide, onBeforeUnmount } from "vue"
 
-/**
- * Color of the indicator dot. `"accent"` (default) is neutral activity; the
- * semantic variants map to feedback colors (e.g. `"error"` flags a tab that
- * needs attention). Optional/undefined falls back to accent for older consumers.
- */
+/** Color of the indicator dot; defaults to `"accent"`. */
 export type IndicatorVariant =
   | "accent"
   | "error"
@@ -114,16 +110,7 @@ export type TabMeta = {
   info: string | null
   disabled: boolean
   alignLast: boolean
-  /**
-   * Display-order hint. Lower numbers render earlier. Defaults to 0 so the
-   * sort is stable in registration order for tabs that don't opt in.
-   * Lets consumers pin certain tabs (e.g. workspace-mode-specific tabs
-   * that appear/disappear via v-if) to a fixed position without relying
-   * on the order in which Vue mounts them.
-   *
-   * Optional for backward compatibility — older `<HoppSmartTab>` consumers
-   * that predate this field still work; the sort treats `undefined` as 0.
-   */
+  /** Display-order hint; lower renders earlier (default 0). */
   order?: number
 }
 
@@ -170,13 +157,9 @@ const throwError = (message: string): never => {
 
 const tabEntries = ref<Array<[string, TabMeta]>>([])
 
-// Resolves a tab's sort weight. `order` is typed `number`, but Vue won't stop a
-// consumer passing `order="1"` (a string, an easy slip for `:order="1"`), so we
-// coerce number/string inputs via `Number()`. Everything else hits the early
-// `typeof` guard and maps to 0 without calling `Number()` — covering `undefined`
-// (the unset default) and `Symbol`, whose `Number()` conversion throws. Numeric
-// inputs that coerce to non-finite (non-numeric strings, NaN, ±Infinity) also
-// map to 0, keeping the comparator well-ordered with its index tiebreak.
+// Resolves a tab's sort weight, coercing string `order` (e.g. `order="1"`) via
+// `Number()`. The `typeof` guard maps `undefined`/`Symbol` to 0 *before* calling
+// `Number()` (`Number(Symbol())` throws); non-finite coercions fall to 0 too.
 const orderOf = (meta: TabMeta): number => {
   const raw = meta.order
   if (typeof raw !== "number" && typeof raw !== "string") return 0
@@ -184,10 +167,7 @@ const orderOf = (meta: TabMeta): number => {
   return Number.isFinite(n) ? n : 0
 }
 
-// Tab related logic — render order respects `tabMeta.order` as a primary
-// sort key, with registration order as a stable tiebreaker. This lets
-// consumers pin a tab to a specific position regardless of when it mounts
-// (e.g. tabs gated behind `v-if` that toggle in and out at runtime).
+// Render order: `order` ascending, then registration index as a stable tiebreak.
 const alignedTabs = computed(() => {
   const indexed = tabEntries.value.map(
     (entry, idx) => [entry, idx] as [[string, TabMeta], number],
@@ -233,13 +213,9 @@ const removeTabEntry = (tabID: string) => {
     O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`)),
   )
 
-  // If we removed the active tab, fall back to the first *enabled* tab in
-  // render order (left group before right), read from the same `alignedTabs`
-  // computed that drives the template — so the choice matches what the user
-  // sees once `order`/`alignLast` reshuffle the bar, and we never silently
-  // activate a disabled tab. If every remaining tab is disabled, fall back to
-  // the first one anyway: a valid (if disabled) active id still beats one left
-  // pointing at the just-removed tab.
+  // If the active tab was removed, activate the first *enabled* tab in render
+  // order (from `alignedTabs`, matching the template); if all are disabled, take
+  // the first anyway so the active id never points at the just-removed tab.
   if (props.modelValue === tabID) {
     const ordered = [...alignedTabs.value.left, ...alignedTabs.value.right]
     const next = ordered.find(([, meta]) => !meta.disabled) ?? ordered[0]
@@ -262,11 +238,8 @@ onBeforeUnmount(() => {
   isUnmounting.value = true
 })
 
-// Maps each indicator variant to its dot color. Hoisted out of the lookup
-// function so it isn't reallocated on every render; typed
-// `Record<IndicatorVariant, string>` so extending the union forces a matching
-// entry here. Literal class strings (not interpolated) so Tailwind's JIT
-// compiles them into the shipped stylesheet.
+// Variant → dot color. Literal class strings (not interpolated) so Tailwind's
+// JIT keeps them in the build.
 const INDICATOR_DOT_CLASSES: Record<IndicatorVariant, string> = {
   accent: "bg-accentLight",
   error: "bg-error",
@@ -275,10 +248,8 @@ const INDICATOR_DOT_CLASSES: Record<IndicatorVariant, string> = {
   info: "bg-info",
 }
 
-// Falls back to accent for an undefined or — since Vue doesn't enforce the TS
-// union at runtime — unrecognized `variant`. The own-property check stops
-// inherited keys ("constructor", "__proto__", …) returning a non-string, so the
-// dot always renders a visible color instead of dropping the class.
+// Falls back to accent for an unknown variant (the TS union isn't enforced at
+// runtime); the own-property check avoids inherited keys resolving to non-strings.
 const indicatorDotClass = (variant?: IndicatorVariant): string => {
   const key = variant ?? "accent"
   return Object.prototype.hasOwnProperty.call(INDICATOR_DOT_CLASSES, key)
