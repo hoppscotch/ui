@@ -24,8 +24,8 @@
               }"
             >
               <button
-                v-for="([tabID, tabMeta], index) in tabGroup"
-                :key="`tab-${index}`"
+                v-for="([tabID, tabMeta]) in tabGroup"
+                :key="tabID"
                 v-tippy="{
                   theme: 'tooltip',
                   placement: 'left',
@@ -60,7 +60,8 @@
                 </span>
                 <span
                   v-if="tabMeta.indicator"
-                  class="ml-2 h-1 w-1 rounded-full bg-accentLight"
+                  class="ml-2 h-1 w-1 rounded-full"
+                  :class="indicatorDotClass(tabMeta.indicatorVariant)"
                 ></span>
               </button>
             </div>
@@ -90,16 +91,27 @@ import { pipe } from "fp-ts/function"
 import { not } from "fp-ts/Predicate"
 import * as A from "fp-ts/Array"
 import * as O from "fp-ts/Option"
-import type { Component, Ref } from "vue"
-import { ref, ComputedRef, computed, provide, onBeforeUnmount } from "vue"
+import type { Component, ComputedRef, Ref } from "vue"
+import { ref, computed, provide, onBeforeUnmount } from "vue"
+
+/** Color of the indicator dot; defaults to `"accent"`. */
+export type IndicatorVariant =
+  | "accent"
+  | "error"
+  | "warning"
+  | "success"
+  | "info"
 
 export type TabMeta = {
   label: string | null
   icon: string | Component | null
   indicator: boolean
+  indicatorVariant?: IndicatorVariant
   info: string | null
   disabled: boolean
   alignLast: boolean
+  /** Display-order hint; lower renders earlier (default 0). */
+  order?: number
 }
 
 export type TabProvider = {
@@ -145,10 +157,28 @@ const throwError = (message: string): never => {
 
 const tabEntries = ref<Array<[string, TabMeta]>>([])
 
-// Tab related logic
+// Resolves a tab's sort weight, coercing string `order` (e.g. `order="1"`) via
+// `Number()`. The `typeof` guard maps `undefined`/`Symbol` to 0 *before* calling
+// `Number()` (`Number(Symbol())` throws); non-finite coercions fall to 0 too.
+const orderOf = (meta: TabMeta): number => {
+  const raw = meta.order
+  if (typeof raw !== "number" && typeof raw !== "string") return 0
+  const n = Number(raw)
+  return Number.isFinite(n) ? n : 0
+}
+
+// Render order: `order` ascending, then registration index as a stable tiebreak.
 const alignedTabs = computed(() => {
-  const leftTabs = tabEntries.value.filter(([_, tabMeta]) => !tabMeta.alignLast)
-  const rightTabs = tabEntries.value.filter(([_, tabMeta]) => tabMeta.alignLast)
+  const indexed = tabEntries.value.map(
+    (entry, idx) => [entry, idx] as [[string, TabMeta], number],
+  )
+  indexed.sort(([[, a], aIdx], [[, b], bIdx]) => {
+    const delta = orderOf(a) - orderOf(b)
+    return delta !== 0 ? delta : aIdx - bIdx
+  })
+  const sorted = indexed.map(([entry]) => entry)
+  const leftTabs = sorted.filter(([_, tabMeta]) => !tabMeta.alignLast)
+  const rightTabs = sorted.filter(([_, tabMeta]) => tabMeta.alignLast)
   return { left: leftTabs, right: rightTabs }
 })
 
@@ -183,9 +213,14 @@ const removeTabEntry = (tabID: string) => {
     O.getOrElseW(() => throwError(`Failed to remove tab entry: ${tabID}`)),
   )
 
-  // If we tried to remove the active tabEntries, switch to first tab entry
-  if (props.modelValue === tabID)
-    if (tabEntries.value.length > 0) selectTab(tabEntries.value[0][0])
+  // If the active tab was removed, activate the first *enabled* tab in render
+  // order (from `alignedTabs`, matching the template); if all are disabled, take
+  // the first anyway so the active id never points at the just-removed tab.
+  if (props.modelValue === tabID) {
+    const ordered = [...alignedTabs.value.left, ...alignedTabs.value.right]
+    const next = ordered.find(([, meta]) => !meta.disabled) ?? ordered[0]
+    if (next) selectTab(next[0])
+  }
 }
 
 const isUnmounting = ref(false)
@@ -202,6 +237,25 @@ provide<TabProvider>("tabs-system", {
 onBeforeUnmount(() => {
   isUnmounting.value = true
 })
+
+// Variant → dot color. Literal class strings (not interpolated) so Tailwind's
+// JIT keeps them in the build.
+const INDICATOR_DOT_CLASSES: Record<IndicatorVariant, string> = {
+  accent: "bg-accentLight",
+  error: "bg-error",
+  warning: "bg-warning",
+  success: "bg-success",
+  info: "bg-info",
+}
+
+// Falls back to accent for an unknown variant (the TS union isn't enforced at
+// runtime); the own-property check avoids inherited keys resolving to non-strings.
+const indicatorDotClass = (variant?: IndicatorVariant): string => {
+  const key = variant ?? "accent"
+  return Object.prototype.hasOwnProperty.call(INDICATOR_DOT_CLASSES, key)
+    ? INDICATOR_DOT_CLASSES[key]
+    : INDICATOR_DOT_CLASSES.accent
+}
 
 const selectTab = (id: string) => {
   emit("update:modelValue", id)

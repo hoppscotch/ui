@@ -25,6 +25,13 @@ export default {
         bannerInfo: "var(--banner-info-color)",
         bannerWarning: "var(--banner-warning-color)",
         bannerError: "var(--banner-error-color)",
+        // Inline feedback colors (e.g. tab indicator dots), themed via themes.scss's
+        // `--feedback-*` vars; the literal 500-shade fallbacks render even where that
+        // stylesheet isn't loaded.
+        error: "var(--feedback-error-color, #ef4444)",
+        warning: "var(--feedback-warning-color, #f59e0b)",
+        success: "var(--feedback-success-color, #22c55e)",
+        info: "var(--feedback-info-color, #3b82f6)",
         tooltip: "var(--tooltip-color)",
         popover: "var(--popover-color)",
         gradientFrom: "var(--gradient-from-color)",

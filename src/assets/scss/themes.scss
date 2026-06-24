@@ -43,6 +43,14 @@
   --tooltip-color: #f5f5f5;
   --popover-color: #1b1b1b;
   --editor-theme: "merbivore_soft";
+
+  // Semantic feedback colors for inline UI signals (e.g. the tab indicator dot),
+  // surfaced by ui-preset's error/warning/success/info tokens. The `--feedback-*`
+  // prefix avoids colliding with the platform's `--status-*` / `--method-*` / `--error-color`.
+  --feedback-error-color: #ef4444; // red-500
+  --feedback-warning-color: #f59e0b; // amber-500
+  --feedback-success-color: #22c55e; // green-500
+  --feedback-info-color: #3b82f6; // blue-500
 }
 
 @mixin green-theme {

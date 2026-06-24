@@ -5,16 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import {
-  onMounted,
-  onBeforeUnmount,
-  inject,
-  computed,
-  watch,
-  Component,
-  markRaw,
-} from "vue"
-import { TabMeta, TabProvider } from "./Tabs.vue"
+import { onMounted, onBeforeUnmount, inject, computed, watch, markRaw } from "vue"
+import type { Component } from "vue"
+import type { TabMeta, TabProvider, IndicatorVariant } from "./Tabs.vue"
 
 const props = withDefaults(
   defineProps<{
@@ -23,15 +16,24 @@ const props = withDefaults(
     icon?: Component | object | string | null
     info?: string | null
     indicator?: boolean
+    /** Color of the indicator dot; defaults to `"accent"`. */
+    indicatorVariant?: IndicatorVariant
     disabled?: boolean
     alignLast?: boolean
+    /**
+     * Render-order hint; lower renders first (ties keep registration order).
+     * Lets `v-if`-toggled tabs hold a fixed position.
+     */
+    order?: number
   }>(),
   {
     icon: null,
     indicator: false,
+    indicatorVariant: "accent",
     info: null,
     disabled: false,
     alignLast: false,
+    order: 0,
   },
 )
 
@@ -43,10 +45,12 @@ const tabMeta = computed<TabMeta>(() => ({
       : props.icon,
 
   indicator: props.indicator,
+  indicatorVariant: props.indicatorVariant,
   info: props.info,
   label: props.label,
   disabled: props.disabled,
   alignLast: props.alignLast,
+  order: props.order,
 }))
 
 const {
